@@ -21,18 +21,10 @@ public class MainCharacter : MonoBehaviour {
 		Vector3 currentPosition = this.transform.position;
 		totalDistance = Vector3.Distance (currentPosition, this.inputManager.clicPosition);
 
-		//if (currentPosition != this.inputManager.clicPosition)
-		if( totalDistance > precision )
-		{
-			Debug.Log ("move "+totalDistance);
-			float deltaDistance = this.speed * Time.deltaTime;
-			float factor = deltaDistance / totalDistance;
-
-			Vector2 mouvement = new Vector2 ();
-			mouvement.x = factor * (this.inputManager.clicPosition.x - currentPosition.x);
-			mouvement.y = factor * (this.inputManager.clicPosition.y - currentPosition.y);
-
-			this.controller.position += mouvement;
-		}
+		if (totalDistance > precision) {
+			Vector2 dep = this.inputManager.clicPosition - currentPosition;
+			this.controller.velocity = this.speed * dep;
+		} else
+			this.controller.velocity = Vector2.zero;
 	}
 }
