@@ -8,7 +8,7 @@ public class Player : MonoBehaviour {
 	private basicCharacter character;
 	public bool useMouse = false;
 
-	// mouxe mouvement param
+	// mouse mouvement param
 	Vector3 clicPosition = new Vector3(0f,0f);
 	Vector3 currentPosition;
 	float precision = 0.1f;

@@ -59,7 +59,18 @@ public class basicCharacter : MonoBehaviour {
 
 			GameObject ball;
 			ball = Instantiate (AssetDatabase.LoadAssetAtPath<GameObject> ("Assets/Prefabs/fireball.prefab"), transform);
-			Vector2 direction = GameObject.Find ("boss").GetComponent<Transform> ().position - this.gameObject.transform.position;
+
+			Vector2 direction;
+
+			if (this.gameObject.name == "perso")
+				direction = GameObject.Find ("boss").GetComponent<Transform> ().position - this.gameObject.transform.position;
+			else if (this.gameObject.name == "boss")
+				direction = GameObject.Find ("perso").GetComponent<Transform> ().position - this.gameObject.transform.position;
+			else {
+				Destroy (ball);
+				return;
+			}
+
 			ball.GetComponent<Rigidbody2D> ().velocity = ball.GetComponent<fireBall>().speed * direction.normalized;
 			ball.GetComponent<fireBall> ().origin = this.gameObject.name;
 		}
