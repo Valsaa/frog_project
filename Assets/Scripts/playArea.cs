@@ -35,7 +35,15 @@ public class playArea : MonoBehaviour {
 	{
 		if (col.gameObject.name == "boss" || col.gameObject.name == "perso")
 		{
-			// TODO
+			col.gameObject.GetComponent<basicCharacter> ().SetOutsideStatus (true, this.areaExitDamagePerSeconds);
+		}
+	}
+
+	void OnTriggerEnter2D(Collider2D col)
+	{
+		if (col.gameObject.name == "boss" || col.gameObject.name == "perso")
+		{
+			col.gameObject.GetComponent<basicCharacter> ().SetOutsideStatus (false, 0);
 		}
 	}
 }
