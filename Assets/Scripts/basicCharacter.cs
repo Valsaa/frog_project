@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class basicCharacter : MonoBehaviour {
 
@@ -25,6 +26,10 @@ public class basicCharacter : MonoBehaviour {
 				previousTime = actualTime;
 				this.pv -= this.areaExitDamagePerSeconds;
 			}
+		}
+		if (this.pv <= 0)
+		{
+			SceneManager.LoadScene (0);
 		}
 	}
 
