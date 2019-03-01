@@ -22,13 +22,16 @@ public class Player : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (useMouse)
-			this.MouseMouvement ();
-		else
-			this.KeyboardMouvement ();
+		if (!this.character.pushEffectOn)
+		{
+			if (useMouse)
+				this.MouseMouvement ();
+			else
+				this.KeyboardMouvement ();
 
-		if (Input.GetKey (KeyCode.Space))
-			this.character.attack ();
+			if (Input.GetKey (KeyCode.Space))
+				this.character.attack ();
+		}
 	}
 
 	void KeyboardMouvement()

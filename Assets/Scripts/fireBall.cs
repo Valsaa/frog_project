@@ -25,7 +25,7 @@ public class fireBall : MonoBehaviour {
 			{
 				col.gameObject.GetComponent<basicCharacter> ().pv -= this.damage;
 
-				// TODO : push effect
+				col.gameObject.GetComponent<basicCharacter> ().push (this.gameObject);
 
 				Destroy (gameObject);
 			}

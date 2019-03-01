@@ -9,11 +9,14 @@ public class basicCharacter : MonoBehaviour {
 	public int pv = 100;
 	public float speed = 0.5f;
 	public bool oustideGroundOn = false;
+	public bool pushEffectOn = false;
+	private float pushEffectTime;
 	private int areaExitDamagePerSeconds = 0;
-	private float previousTime;
+	private float previousGroundDamageTime;
 	private float actualTime;
 	private float lastAttackTime;
-	public GameObject fireballprefab;
+
+	private GameObject fireballprefab;
 
 	// Use this for initialization
 	void Start () {
@@ -22,14 +25,19 @@ public class basicCharacter : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		actualTime = Time.time;
 		if (oustideGroundOn)
 		{
-			actualTime = Time.time;
-			if ((actualTime - previousTime) >= 1f)
+			if ((actualTime - previousGroundDamageTime) >= 1f)
 			{
-				previousTime = actualTime;
+				previousGroundDamageTime = actualTime;
 				this.pv -= this.areaExitDamagePerSeconds;
 			}
+		}
+		if (pushEffectOn && (actualTime - pushEffectTime >1) )
+		{
+			pushEffectOn = false;
+			this.gameObject.GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
 		}
 		if (this.pv <= 0)
 		{
@@ -41,7 +49,7 @@ public class basicCharacter : MonoBehaviour {
 	{
 		this.oustideGroundOn = status;
 		this.areaExitDamagePerSeconds = DPS;
-		this.actualTime = this.previousTime = Time.time;
+		this.previousGroundDamageTime = Time.time;
 	}
 
 	public void attack()
@@ -55,5 +63,13 @@ public class basicCharacter : MonoBehaviour {
 			ball.GetComponent<Rigidbody2D> ().velocity = ball.GetComponent<fireBall>().speed * direction.normalized;
 			ball.GetComponent<fireBall> ().origin = this.gameObject.name;
 		}
+	}
+
+	public void push(GameObject fireball)
+	{
+		this.pushEffectOn = true;
+		Vector2 pushDirection = this.transform.position - fireball.transform.position;
+		this.gameObject.GetComponent<Rigidbody2D> ().velocity = fireball.GetComponent<fireBall> ().speed * pushDirection.normalized;
+		this.pushEffectTime = Time.time;
 	}
 }
