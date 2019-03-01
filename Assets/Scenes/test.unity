@@ -249,6 +249,8 @@ MonoBehaviour:
   pv: 100
   speed: 0.5
   oustideGroundOn: 0
+  fireballprefab: {fileID: 1187778704728458, guid: 3f2dec2192456414899413f34ff08dae,
+    type: 2}
 --- !u!114 &932640119
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -571,6 +573,8 @@ MonoBehaviour:
   pv: 100
   speed: 3
   oustideGroundOn: 0
+  fireballprefab: {fileID: 1187778704728458, guid: 3f2dec2192456414899413f34ff08dae,
+    type: 2}
 --- !u!114 &1778186654
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -582,7 +586,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34f2f127c054ff24ca56d0d845c1ea6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  useMouse: 1
+  useMouse: 0
 --- !u!1 &2046466696
 GameObject:
   m_ObjectHideFlags: 0

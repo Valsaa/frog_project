@@ -26,6 +26,9 @@ public class Player : MonoBehaviour {
 			this.MouseMouvement ();
 		else
 			this.KeyboardMouvement ();
+
+		if (Input.GetKey (KeyCode.Space))
+			this.character.attack ();
 	}
 
 	void KeyboardMouvement()
