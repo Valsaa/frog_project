@@ -302,7 +302,7 @@ Transform:
   m_GameObject: {fileID: 938286288}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 50, y: 40, z: 1}
+  m_LocalScale: {x: 100, y: 80, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
@@ -379,7 +379,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 10
+  orthographic size: 20
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -539,6 +539,7 @@ GameObject:
   - component: {fileID: 2046466697}
   - component: {fileID: 2046466700}
   - component: {fileID: 2046466699}
+  - component: {fileID: 2046466701}
   m_Layer: 0
   m_Name: ground
   m_TagString: Untagged
@@ -598,7 +599,7 @@ Transform:
   m_GameObject: {fileID: 2046466696}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 50, y: 40, z: 1}
+  m_LocalScale: {x: 100, y: 80, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -612,7 +613,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -648,3 +649,17 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 7
+--- !u!114 &2046466701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2046466696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5655eb1fb565a074e8884c743b83c472, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  areaReductionPeriodSeconds: 10
+  areaReductionScale: 1
+  areaExitDamagePerSeconds: 5
