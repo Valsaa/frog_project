@@ -30,5 +30,7 @@ public class fireBall : MonoBehaviour {
 				Destroy (gameObject);
 			}
 		}
+		if (col.gameObject.name == "void")
+			Destroy (gameObject);
 	}
 }
