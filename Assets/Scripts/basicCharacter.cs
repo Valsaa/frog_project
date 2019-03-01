@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class basicCharacter : MonoBehaviour {
 
 	public int pv = 100;
+	public float speed = 0.5f;
 	public bool oustideGroundOn = false;
 	private int areaExitDamagePerSeconds = 0;
 	private float previousTime;
