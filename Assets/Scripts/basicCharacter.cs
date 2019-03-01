@@ -7,7 +7,7 @@ using UnityEditor;
 public class basicCharacter : MonoBehaviour {
 
 	public int pv = 100;
-	public float speed = 0.5f;
+	public float speed = 3f;
 	public bool oustideGroundOn = false;
 	public bool pushEffectOn = false;
 	private float pushEffectTime;

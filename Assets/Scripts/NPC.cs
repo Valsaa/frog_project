@@ -36,7 +36,7 @@ public class NPC : MonoBehaviour {
 	void move()
 	{
 		Vector2 Direction = new Vector2 (Random.value*2-1, Random.value*2-1);
-		this.controller.velocity = Direction.normalized * this.character.speed*2;
+		this.controller.velocity = Direction.normalized * this.character.speed;
 		timeBeforeNextMove = Random.value * 3 + 2 + Time.time;
 	}
 }
