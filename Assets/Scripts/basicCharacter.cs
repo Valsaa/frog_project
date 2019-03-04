@@ -10,17 +10,21 @@ public class basicCharacter : MonoBehaviour {
 	public float speed = 3f;
 	public bool oustideGroundOn = false;
 	public bool pushEffectOn = false;
+	public bool dashEffectOn = false;
 	private float pushEffectTime;
 	private int areaExitDamagePerSeconds = 0;
 	private float previousGroundDamageTime;
 	private float actualTime;
+
 	private float lastAttackTime;
+	private float lastCutTime;
+	private float startDashTime;
 
 	private GameObject fireballprefab;
 
 	// Use this for initialization
 	void Start () {
-		lastAttackTime = Time.time;
+		startDashTime = lastAttackTime = lastCutTime = Time.time;
 	}
 	
 	// Update is called once per frame
@@ -43,6 +47,13 @@ public class basicCharacter : MonoBehaviour {
 		{
 			SceneManager.LoadScene (0);
 		}
+		if(this.gameObject.name != "boss" && (Time.time - this.lastCutTime) >= 0.5f)
+			this.gameObject.GetComponent<SpriteRenderer> ().sprite = AssetDatabase.LoadAssetAtPath<Sprite> ("Assets/Sprites/perso.png");
+		if (dashEffectOn && (Time.time - this.startDashTime) >= 0.5f) {
+			this.gameObject.GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
+			dashEffectOn = false;
+		}
+			
 	}
 
 	public void SetOutsideStatus(bool status, int DPS)
@@ -54,7 +65,7 @@ public class basicCharacter : MonoBehaviour {
 
 	public void attack()
 	{
-		if ((Time.time - this.lastAttackTime) >= 1f) {
+		if ((Time.time - this.lastAttackTime) >= 3f) {
 			this.lastAttackTime = Time.time;
 
 			GameObject ball;
@@ -73,6 +84,36 @@ public class basicCharacter : MonoBehaviour {
 
 			ball.GetComponent<Rigidbody2D> ().velocity = ball.GetComponent<fireBall>().speed * direction.normalized;
 			ball.GetComponent<fireBall> ().origin = this.gameObject.name;
+		}
+	}
+
+	public void cut()
+	{
+		if ((Time.time - this.lastCutTime) >= 1f) {
+			this.lastCutTime = Time.time;
+
+			this.gameObject.GetComponent<SpriteRenderer> ().sprite = AssetDatabase.LoadAssetAtPath<Sprite> ("Assets/Sprites/perso-epee.png");
+		}
+	}
+
+	public void dash(Vector3 direction)
+	{
+		direction.z = 0f;
+		applyDash(direction - this.gameObject.transform.position);
+	}
+
+	public void dash()
+	{
+		applyDash(this.gameObject.GetComponent<Rigidbody2D> ().velocity);
+	}
+
+	private void applyDash(Vector3 direction)
+	{
+		if (!this.pushEffectOn)
+		{
+			startDashTime = Time.time;
+			this.gameObject.GetComponent<Rigidbody2D> ().velocity = direction.normalized * this.speed * 3;
+			dashEffectOn = true;
 		}
 	}
 
