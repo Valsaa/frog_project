@@ -69,11 +69,7 @@ namespace B2B.GameKit.InputController
             {(int)AxisType.Cancel, "Cancel"},
         };
 
-        /// <summary>
-        /// Acces to the Input Replay
-        /// </summary>
-        [SerializeField]
-        protected InputReplay inputReplay;
+        
         /// <summary>
         /// How quickly flick velocity is accumulated with movements
         /// </summary>
@@ -615,6 +611,15 @@ namespace B2B.GameKit.InputController
         {
             get { return haveControl; }
             set { haveControl = value; }
+        }
+
+        // Acces to the Input Replay
+        protected InputReplay inputReplay;
+
+        // Contructor
+        public InputController()
+        {
+
         }
 
         // Abstract function
