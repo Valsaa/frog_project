@@ -10,6 +10,12 @@ namespace B2B.GameKit.InputController
 {
     public class InputReplay : MonoBehaviour
     {
+        protected static InputReplay instance;
+        public static InputReplay Instance
+        {
+            get { return instance; }
+        }
+
         // public types
         public enum Mode { Record, PlayBack };
         public enum UpdateFunction { FixedUpdate, Update, Both };
@@ -104,6 +110,14 @@ namespace B2B.GameKit.InputController
         private float startTime = 0.0f;
 
 
+        void Awake()
+        {
+            oldSequence.init();
+            currentSequence.init();
+            nextSequence.init();
+            if (instance == null) instance = this;
+            else throw new UnityException("There cannot be more than one PlayerCharacter script.  The instances are " + instance.name + " and " + name + ".");
+        }
 
         // Use this for initialization
         void Start()

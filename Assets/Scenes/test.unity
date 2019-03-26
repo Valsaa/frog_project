@@ -120,17 +120,22 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 114625364348497200, guid: 0e081a3498d69f14bbdbba4a5eda3fdc,
+        type: 2}
+      propertyPath: AxisList.Array.size
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4307226250002908, guid: 0e081a3498d69f14bbdbba4a5eda3fdc, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -0.14345205
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4307226250002908, guid: 0e081a3498d69f14bbdbba4a5eda3fdc, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -0.103812456
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4307226250002908, guid: 0e081a3498d69f14bbdbba4a5eda3fdc, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -0.052734375
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4307226250002908, guid: 0e081a3498d69f14bbdbba4a5eda3fdc, type: 2}
       propertyPath: m_LocalRotation.x
@@ -151,6 +156,31 @@ Prefab:
     - target: {fileID: 4307226250002908, guid: 0e081a3498d69f14bbdbba4a5eda3fdc, type: 2}
       propertyPath: m_RootOrder
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114625364348497200, guid: 0e081a3498d69f14bbdbba4a5eda3fdc,
+        type: 2}
+      propertyPath: active
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114625364348497200, guid: 0e081a3498d69f14bbdbba4a5eda3fdc,
+        type: 2}
+      propertyPath: mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114625364348497200, guid: 0e081a3498d69f14bbdbba4a5eda3fdc,
+        type: 2}
+      propertyPath: AxisList.Array.data[0]
+      value: Horizontal
+      objectReference: {fileID: 0}
+    - target: {fileID: 114625364348497200, guid: 0e081a3498d69f14bbdbba4a5eda3fdc,
+        type: 2}
+      propertyPath: AxisList.Array.data[1]
+      value: Vertical
+      objectReference: {fileID: 0}
+    - target: {fileID: 114625364348497200, guid: 0e081a3498d69f14bbdbba4a5eda3fdc,
+        type: 2}
+      propertyPath: UpdateCycle
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 0e081a3498d69f14bbdbba4a5eda3fdc, type: 2}
