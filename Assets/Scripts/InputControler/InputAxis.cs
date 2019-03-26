@@ -32,7 +32,7 @@ namespace B2B.GameKit.InputController
 
             // The Horizontal and Vertical ranges change from 0 to +1 or -1 with increase/decrease in 0.05f steps.
             // GetAxisRaw has changes from 0 to 1 or -1 immediately, so with no steps.
-            float inputValue = Input.GetAxis(keyName);
+            float inputValue = InputReplay.Instance.GetAxis(keyName);
 
             if (analog)
             {

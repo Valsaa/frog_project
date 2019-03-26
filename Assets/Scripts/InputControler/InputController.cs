@@ -69,7 +69,6 @@ namespace B2B.GameKit.InputController
             {(int)AxisType.Cancel, "Cancel"},
         };
 
-        
         /// <summary>
         /// How quickly flick velocity is accumulated with movements
         /// </summary>
@@ -120,7 +119,7 @@ namespace B2B.GameKit.InputController
             /// </summary>
             public void ReadInput(float flickAccumulationFactor, float dragThresholdMouse, float flickThreshold, float holdTime, float tapTime, float doubleTapTime)
             {
-                InterpretInput(Input.GetKey(key), flickAccumulationFactor, dragThresholdMouse, flickThreshold, holdTime, tapTime, doubleTapTime);
+                InterpretInput(InputReplay.Instance.GetKey(key), flickAccumulationFactor, dragThresholdMouse, flickThreshold, holdTime, tapTime, doubleTapTime);
             }
 
             /// <summary>
@@ -150,7 +149,7 @@ namespace B2B.GameKit.InputController
             /// </summary>
             public void ReadInput(float flickAccumulationFactor, float dragThresholdMouse, float flickThreshold, float holdTime, float tapTime, float doubleTapTime)
             {
-                InterpretInput(Input.GetKey(XboxButtonTypeToName[(int)controllerButton]), flickAccumulationFactor, dragThresholdMouse, flickThreshold, holdTime, tapTime, doubleTapTime);
+                //InterpretInput(InputReplay.Instance.GetKey(XboxButtonTypeToName[(int)controllerButton]), flickAccumulationFactor, dragThresholdMouse, flickThreshold, holdTime, tapTime, doubleTapTime);
             }
 
             /// <summary>
@@ -178,7 +177,9 @@ namespace B2B.GameKit.InputController
             /// </summary>
             public void ReadInput()
             {
-                InterpretInput(AxisTypeToName[(int)axisType]);
+                // The Horizontal and Vertical ranges change from 0 to +1 or -1 with increase/decrease in 0.05f steps.
+                // GetAxisRaw has changes from 0 to 1 or -1 immediately, so with no steps.
+                InterpretInput(InputReplay.Instance.GetAxis(AxisTypeToName[(int)axisType]));
             }
         }
 
@@ -235,7 +236,7 @@ namespace B2B.GameKit.InputController
 
                 // Get mouse data
                 previousPosition = currentPosition;
-                currentPosition = Input.mousePosition;
+                currentPosition = InputReplay.Instance.mousePosition;
                 deltaPosition = currentPosition - previousPosition;
                 mouseMovedOnThisFrame = deltaPosition.sqrMagnitude >= Mathf.Epsilon;
 
@@ -258,7 +259,7 @@ namespace B2B.GameKit.InputController
 
                                 // First press
                                 startTime = Time.realtimeSinceStartup;
-                                startPosition = Input.mousePosition;
+                                startPosition = InputReplay.Instance.mousePosition;
                                 //startedOverUI = EventSystem.current.IsPointerOverGameObject( (int)keyMouse - 1 );
 
                                 // Reset some stuff
@@ -375,7 +376,7 @@ namespace B2B.GameKit.InputController
             /// </summary>
             public void ReadInput(float flickAccumulationFactor, float dragThresholdMouse, float flickThreshold, float holdTime, float tapTime, float doubleTapTime)
             {
-                InterpretInput(Input.GetMouseButton((int)keyMouse), flickAccumulationFactor, dragThresholdMouse, flickThreshold, holdTime, tapTime, doubleTapTime);
+                InterpretInput(InputReplay.Instance.GetMouseButton((int)keyMouse), flickAccumulationFactor, dragThresholdMouse, flickThreshold, holdTime, tapTime, doubleTapTime);
             }
             
             /// <summary>
@@ -519,7 +520,7 @@ namespace B2B.GameKit.InputController
                     return;
 
                 previousPosition = currentPosition;
-                currentPosition = Input.mousePosition;
+                currentPosition = InputReplay.Instance.mousePosition;
                 deltaPosition = currentPosition - previousPosition;
                 mouseMovedOnThisFrame = deltaPosition.sqrMagnitude >= Mathf.Epsilon;
 
@@ -612,16 +613,7 @@ namespace B2B.GameKit.InputController
             get { return haveControl; }
             set { haveControl = value; }
         }
-
-        // Acces to the Input Replay
-        protected InputReplay inputReplay;
-
-        // Contructor
-        public InputController()
-        {
-
-        }
-
+        
         // Abstract function
         public abstract void GetInputs();
 
