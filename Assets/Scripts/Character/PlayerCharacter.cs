@@ -60,7 +60,7 @@ namespace XDaddy.Character
             // Get all inputs
             playerInput.GetInputs();
 
-            // read inputs
+            // Use all inputs
             GroundedHorizontalMovement();
             animator.SetFloat("IsRunning", moveVector.normalized.magnitude);
         }
@@ -71,11 +71,14 @@ namespace XDaddy.Character
             float desiredSpeedY = playerInput.Vertical.GetValue() * maxSpeed * speedScale;
             float acceleration = playerInput.ReceivingInputMovement() ? groundAcceleration : groundDeceleration;
 
+            if (playerInput.Horizontal.ReceivingInput() && playerInput.Vertical.ReceivingInput())
+            {
+                desiredSpeedX *= 0.7071f;
+                desiredSpeedY *= 0.7071f;
+            }
+
             moveVector.x = Mathf.MoveTowards(moveVector.x, desiredSpeedX, acceleration * Time.deltaTime);
             moveVector.y = Mathf.MoveTowards(moveVector.y, desiredSpeedY, acceleration * Time.deltaTime);
-
-            if(playerInput.ReceivingInputMovement())
-                Debug.Log("Move : " + playerInput.Horizontal.GetValue() + " / " + playerInput.Vertical.GetValue() + " ==> " + moveVector.x + " / " + moveVector.y);
         }
 
 
