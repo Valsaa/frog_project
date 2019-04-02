@@ -19,13 +19,17 @@ namespace XDaddy.Character
         [Range(1f, 20f)] public float maxSpeed = 5f;
         public float groundAcceleration = 100f;
         public float groundDeceleration = 100f;
+        public float deltat = 2;
 
         // private parameters
         [SerializeField]
         private PlayerInput playerInput = new PlayerInput();
         private CharacterController2D characterController2D;
         private Animator animator;
+                
         private Vector2 moveVector;
+        private Vector2 directionVector;
+        private Vector2 targetPosition;
 
         // Unity 3D function
         void Awake()
@@ -62,12 +66,12 @@ namespace XDaddy.Character
 
             // Use all inputs
             GroundedHorizontalMovement();
-            animator.SetFloat("IsRunning", moveVector.normalized.magnitude);
+            //animator.SetFloat("IsRunning", moveVector.normalized.magnitude);
         }
 
         private void GroundedHorizontalMovement(float speedScale = 1f)
         {
-            float desiredSpeedX = playerInput.Horizontal.GetValue() * maxSpeed * speedScale;
+            /*float desiredSpeedX = playerInput.Horizontal.GetValue() * maxSpeed * speedScale;
             float desiredSpeedY = playerInput.Vertical.GetValue() * maxSpeed * speedScale;
             float acceleration = playerInput.ReceivingInputMovement() ? groundAcceleration : groundDeceleration;
 
@@ -78,7 +82,29 @@ namespace XDaddy.Character
             }
 
             moveVector.x = Mathf.MoveTowards(moveVector.x, desiredSpeedX, acceleration * Time.deltaTime);
-            moveVector.y = Mathf.MoveTowards(moveVector.y, desiredSpeedY, acceleration * Time.deltaTime);
+            moveVector.y = Mathf.MoveTowards(moveVector.y, desiredSpeedY, acceleration * Time.deltaTime);*/
+
+            if (playerInput.MouseRight.GetDown())
+            {
+                targetPosition = Camera.main.ScreenToWorldPoint(playerInput.Mouse.GetCurrentPosition());
+
+                directionVector = targetPosition - (Vector2)transform.position;
+                directionVector = directionVector.normalized * maxSpeed * speedScale;
+            }
+
+            float distance = Vector2.Distance((Vector2)transform.position, targetPosition);
+            if (distance < deltat * 0.1)
+            {
+                moveVector = new Vector2(0, 0);
+            }
+            else if (distance < deltat)
+            {
+                moveVector = Vector2.MoveTowards(moveVector, directionVector, groundDeceleration * Time.deltaTime);
+            }
+            else
+            {                
+                moveVector = Vector2.MoveTowards(moveVector, directionVector, groundAcceleration * Time.deltaTime);
+            }
         }
 
 
