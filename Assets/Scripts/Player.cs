@@ -9,6 +9,8 @@ public class Player : MonoBehaviour {
 	private basicCharacter character;
 	public enum Hypothese {FRGO_43_HYPOTHESE_1, FRGO_35_HYPOTHESE_2, FRGO_55_HYPOTHESE_3};
 	public Hypothese controles;
+    public enum CharacterSize {PX_32x32, PX_64x64, PX_96x64, PX_128x128};
+    public CharacterSize spriteSize;
 
 	// mouse mouvement param
 	Vector3 clicPosition = new Vector3(0f,0f);
