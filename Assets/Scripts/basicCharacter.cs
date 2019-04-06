@@ -47,8 +47,9 @@ public class basicCharacter : MonoBehaviour {
 		{
 			SceneManager.LoadScene (0);
 		}
-		if(this.gameObject.name != "boss" && (Time.time - this.lastCutTime) >= 0.5f)
+		/*if(this.gameObject.name != "boss" && (Time.time - this.lastCutTime) >= 0.5f)
 			this.gameObject.GetComponent<SpriteRenderer> ().sprite = AssetDatabase.LoadAssetAtPath<Sprite> ("Assets/Sprites/perso.png");
+			*/
 		if (dashEffectOn && (Time.time - this.startDashTime) >= 0.5f) {
 			this.gameObject.GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
 			dashEffectOn = false;

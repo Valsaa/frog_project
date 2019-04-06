@@ -9,8 +9,8 @@ public class Player : MonoBehaviour {
 	private basicCharacter character;
 	public enum Hypothese {FRGO_43_HYPOTHESE_1, FRGO_35_HYPOTHESE_2, FRGO_55_HYPOTHESE_3};
 	public Hypothese controles;
-    public enum CharacterSize {PX_32x32, PX_64x64, PX_96x64, PX_128x128};
-    public CharacterSize spriteSize;
+	public enum CharacterSize {PX_32x32, PX_64x64, PX_96x64, PX_128x128};
+	public CharacterSize spriteSize;
 
 	// mouse mouvement param
 	Vector3 clicPosition = new Vector3(0f,0f);
@@ -31,8 +31,30 @@ public class Player : MonoBehaviour {
 	private enum Actions {NONE=0, EPEE=1, DASH=2, FIRE=3, TAUNT=4};
 	private Actions selectAction;
 
+	void SetupSprite()
+	{
+		Sprite selectedSprite = new Sprite ();
+		switch (spriteSize) {
+		case CharacterSize.PX_32x32:
+			selectedSprite = Resources.Load <Sprite>("echelle-perso_32px_x1");
+			break;
+		case CharacterSize.PX_64x64:
+			selectedSprite = Resources.Load <Sprite>("echelle-perso_64px_x1");
+			break;
+		case CharacterSize.PX_96x64:
+			selectedSprite = Resources.Load <Sprite>("echelle-perso_96px_x1");
+			break;
+		case CharacterSize.PX_128x128:
+			selectedSprite = Resources.Load <Sprite>("echelle-perso_128px_x1");
+			break;
+		}
+		Debug.Log (selectedSprite);
+		this.gameObject.GetComponent<SpriteRenderer> ().sprite = selectedSprite;
+	}
+
 	// Use this for initialization
 	void Start () {
+		SetupSprite ();
 		selectAction = Actions.NONE;
 		TauntTime = Time.time;
 		clicPosition = currentPosition = getFeetPosition ();;
