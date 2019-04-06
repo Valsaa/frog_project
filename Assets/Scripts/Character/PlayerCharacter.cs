@@ -15,11 +15,15 @@ namespace XDaddy.Character
             get { return instance; }
         }
 
+        // public types
+        public enum SpriteSize { _32x32PX, _64x64PX , _96x64PX, _128x128PX };
+
         // public parameters
         [Range(1f, 20f)] public float maxSpeed = 5f;
         public float groundAcceleration = 100f;
         public float groundDeceleration = 100f;
         public float deltat = 2;
+        public SpriteSize playerSpriteSize;
 
         // private parameters
         [SerializeField]
@@ -39,6 +43,27 @@ namespace XDaddy.Character
 
             characterController2D = GetComponent<CharacterController2D>();
             animator = GetComponent<Animator>();
+
+            // load the correct player sprite
+            Sprite selectedSprite = new Sprite();
+            switch (playerSpriteSize)
+            {
+                case SpriteSize._32x32PX:
+                    selectedSprite = Resources.Load<Sprite>("echelle-perso_32px_x1");
+                    break;
+                default:
+                case SpriteSize._64x64PX:
+                    selectedSprite = Resources.Load<Sprite>("echelle-perso_64px_x1");
+                    break;
+                case SpriteSize._96x64PX:
+                    selectedSprite = Resources.Load<Sprite>("echelle-perso_96px_x1");
+                    break;
+                case SpriteSize._128x128PX:
+                    selectedSprite = Resources.Load<Sprite>("echelle-perso_128px_x1");
+                    break;
+            }
+            Debug.Log("loaded sprite : "+selectedSprite.name);
+            this.gameObject.GetComponent<SpriteRenderer>().sprite = selectedSprite;
 
         }
         void OnEnable()
