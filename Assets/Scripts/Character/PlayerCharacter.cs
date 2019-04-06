@@ -44,27 +44,7 @@ namespace XDaddy.Character
             characterController2D = GetComponent<CharacterController2D>();
             animator = GetComponent<Animator>();
 
-            // load the correct player sprite
-            Sprite selectedSprite = new Sprite();
-            switch (playerSpriteSize)
-            {
-                case SpriteSize._32x32PX:
-                    selectedSprite = Resources.Load<Sprite>("echelle-perso_32px_x1");
-                    break;
-                default:
-                case SpriteSize._64x64PX:
-                    selectedSprite = Resources.Load<Sprite>("echelle-perso_64px_x1");
-                    break;
-                case SpriteSize._96x64PX:
-                    selectedSprite = Resources.Load<Sprite>("echelle-perso_96px_x1");
-                    break;
-                case SpriteSize._128x128PX:
-                    selectedSprite = Resources.Load<Sprite>("echelle-perso_128px_x1");
-                    break;
-            }
-            Debug.Log("loaded sprite : "+selectedSprite.name);
-            this.gameObject.GetComponent<SpriteRenderer>().sprite = selectedSprite;
-
+            SetupSprite();
         }
         void OnEnable()
         {
@@ -130,6 +110,30 @@ namespace XDaddy.Character
             {                
                 moveVector = Vector2.MoveTowards(moveVector, directionVector, groundAcceleration * Time.deltaTime);
             }
+        }
+
+        void SetupSprite ()
+        {
+            // load the correct player sprite
+            Sprite selectedSprite = new Sprite();
+            switch (playerSpriteSize)
+            {
+                case SpriteSize._32x32PX:
+                    selectedSprite = Resources.Load<Sprite>("echelle-perso_32px_x1");
+                    break;
+                default:
+                case SpriteSize._64x64PX:
+                    selectedSprite = Resources.Load<Sprite>("echelle-perso_64px_x1");
+                    break;
+                case SpriteSize._96x64PX:
+                    selectedSprite = Resources.Load<Sprite>("echelle-perso_96px_x1");
+                    break;
+                case SpriteSize._128x128PX:
+                    selectedSprite = Resources.Load<Sprite>("echelle-perso_128px_x1");
+                    break;
+            }
+            Debug.Log("loaded sprite : " + selectedSprite.name);
+            this.gameObject.GetComponent<SpriteRenderer>().sprite = selectedSprite;
         }
 
 
