@@ -21,6 +21,12 @@ public class PerfectPixelCamera : MonoBehaviour
 ]
 public int TexturePixelsPerWorldUnit = 16;
 
+// Set the Zoom
+[
+    Range (1, 8)
+]
+public int Zoom = 1;
+
 // Reference to the camera on this same GameObject. Found
 // by the OnEnable function.
 private Camera cameraComponent;
@@ -106,13 +112,14 @@ void LateUpdate ()
     camera.transparencySortMode = TransparencySortMode.Orthographic;
     camera.orthographic = true;
     camera.transform.rotation = Quaternion.identity;
-    camera.orthographicSize = Mathf.Max (camera.orthographicSize, 0.00001f);
+    //camera.orthographicSize = Mathf.Max (camera.orthographicSize, 0.00001f);
+    camera.orthographicSize = Screen.height / 2;    // we use the Zoom parameter instead
 
     // This is the code that computes the parameters needed to perfectly map
     // world-space pixels to screen-space pixels.
     var pixelRect = camera.pixelRect;
     float texturePixelsPerWorldUnit = this.TexturePixelsPerWorldUnit;
-    float zoomFactor = Mathf.Max (1f, Mathf.Ceil ((1f * pixelRect.height) / (camera.orthographicSize * 2f * texturePixelsPerWorldUnit)));
+    float zoomFactor = Mathf.Max (1f, this.Zoom * Mathf.Ceil ((1f * pixelRect.height) / (camera.orthographicSize * 2f * texturePixelsPerWorldUnit)));
     float halfWidth  = (1f * pixelRect.width)  / (zoomFactor * 2f * texturePixelsPerWorldUnit);
     float halfHeight = (1f * pixelRect.height) / (zoomFactor * 2f * texturePixelsPerWorldUnit);
     float snapSizeWorldUnits = 1f / (zoomFactor * texturePixelsPerWorldUnit);
