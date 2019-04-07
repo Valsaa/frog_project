@@ -4,6 +4,12 @@ using UnityEngine;
 
 namespace XDaddy.Character
 {
+    public enum InputMouvementBy
+    {
+        Keyboard,
+        Mouse,
+    }
+
     [RequireComponent(typeof(CharacterController2D))]
     [RequireComponent(typeof(Animator))]
     public class PlayerCharacter : MonoBehaviour
@@ -16,9 +22,10 @@ namespace XDaddy.Character
         }
 
         // public parameters
-        [Range(1f, 20f)] public float maxSpeed = 5f;
-        public float groundAcceleration = 100f;
-        public float groundDeceleration = 100f;
+        public InputMouvementBy inputMouvementBy = InputMouvementBy.Keyboard;
+        [Range(1f, 200f)] public float maxSpeed = 5f;
+        [Range(1f, 1000f)] public float groundAcceleration = 100f;
+        [Range(1f, 1000f)] public float groundDeceleration = 100f;
         public float deltat = 2;
 
         // private parameters
@@ -26,10 +33,14 @@ namespace XDaddy.Character
         private PlayerInput playerInput = new PlayerInput();
         private CharacterController2D characterController2D;
         private Animator animator;
-                
+
         private Vector2 moveVector;
         private Vector2 directionVector;
         private Vector2 targetPosition;
+
+        // Delegate
+        delegate void GroundedHorizontalMovementHandler(float speedScale = 1f);
+        GroundedHorizontalMovementHandler GroundedHorizontalMovement;
 
         // Unity 3D function
         void Awake()
@@ -40,6 +51,17 @@ namespace XDaddy.Character
             characterController2D = GetComponent<CharacterController2D>();
             animator = GetComponent<Animator>();
 
+        }
+        void Start()
+        {
+            if (inputMouvementBy == InputMouvementBy.Keyboard)
+            {
+                GroundedHorizontalMovement = KeyboardGroundedHorizontalMovement;
+            }
+            else // InputMouvementBy.Mouse
+            {
+                GroundedHorizontalMovement = MouseGroundedHorizontalMovement;
+            }
         }
         void OnEnable()
         {
@@ -69,9 +91,9 @@ namespace XDaddy.Character
             //animator.SetFloat("IsRunning", moveVector.normalized.magnitude);
         }
 
-        private void GroundedHorizontalMovement(float speedScale = 1f)
+        private void KeyboardGroundedHorizontalMovement(float speedScale = 1f)
         {
-            /*float desiredSpeedX = playerInput.Horizontal.GetValue() * maxSpeed * speedScale;
+            float desiredSpeedX = playerInput.Horizontal.GetValue() * maxSpeed * speedScale;
             float desiredSpeedY = playerInput.Vertical.GetValue() * maxSpeed * speedScale;
             float acceleration = playerInput.ReceivingInputMovement() ? groundAcceleration : groundDeceleration;
 
@@ -82,8 +104,10 @@ namespace XDaddy.Character
             }
 
             moveVector.x = Mathf.MoveTowards(moveVector.x, desiredSpeedX, acceleration * Time.deltaTime);
-            moveVector.y = Mathf.MoveTowards(moveVector.y, desiredSpeedY, acceleration * Time.deltaTime);*/
-
+            moveVector.y = Mathf.MoveTowards(moveVector.y, desiredSpeedY, acceleration * Time.deltaTime);
+        }
+        private void MouseGroundedHorizontalMovement(float speedScale = 1f)
+        {
             if (playerInput.MouseRight.GetDown())
             {
                 targetPosition = Camera.main.ScreenToWorldPoint(playerInput.Mouse.GetCurrentPosition());
@@ -102,11 +126,10 @@ namespace XDaddy.Character
                 moveVector = Vector2.MoveTowards(moveVector, directionVector, groundDeceleration * Time.deltaTime);
             }
             else
-            {                
+            {
                 moveVector = Vector2.MoveTowards(moveVector, directionVector, groundAcceleration * Time.deltaTime);
             }
         }
-
 
     }
 }

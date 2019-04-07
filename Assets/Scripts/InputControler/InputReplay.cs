@@ -104,7 +104,7 @@ namespace B2B.GameKit.InputController
 
         // delegate to switch from record to play activity
         private delegate void Work(float time);
-        private Work work;
+        private Work work = pause;
 
         // start time of the record or playback
         private float startTime = 0.0f;
@@ -310,7 +310,7 @@ namespace B2B.GameKit.InputController
             _anyKeyDown = delegate { return currentSequence.gKD.Any<KeyCode>(); };
         }
 
-        private void pause(float time)
+        private static void pause(float time)
         {
             // nothing to do
         }
