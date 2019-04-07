@@ -6,34 +6,80 @@ using XDaddy.Character;
 
 public class MapSizeGenerator : MonoBehaviour {
 
+    [
+        Tooltip ("Taille Initial de la zone en unitée du Player")
+    ]
     public int mapMultiplier = 0;
-    public string spriteName = "";
+    [
+         Tooltip ("nom du fichier contenant le Tile à utilisé (exemple 'ground' pour ground.assset)")   
+    ]
+    public string TileName = "";
+
+    protected Tile tile;
+    protected Tilemap map;
+    protected int initialTileSize; // starting size of the Zone in Tile unit
 
     // Use this for initialization
     void Start () {
-        Tile ground = Resources.Load<Tile>(spriteName);
-        if(ground == null)
-        {
-            Debug.Log("Pas de sprite selectionné, " + this.gameObject.name + " non générée.");
-            return;
-        }
-
-        Tilemap map =  this.gameObject.GetComponent<Tilemap>();
-        map.ClearAllTiles();
-
-        float PlayerSize = GameObject.Find("MainCharacter").GetComponent<SpriteRenderer>().sprite.bounds.extents.y;
-        int mapsize = (int)Mathf.Floor(mapMultiplier * (PlayerSize * 2) / (ground.sprite.bounds.extents.y * 2) /2); // on divise par 2, on va utilisé -/+ au lieu de 0/+
-        BoxFill(map, ground, new Vector3Int(-mapsize, -mapsize, 0), new Vector3Int(mapsize, mapsize, 0));
-        Debug.Log("created map :"+mapsize);
-        
     }
 	
 	// Update is called once per frame
 	void Update () {
-		
 	}
 
-    public void BoxFill(Tilemap map, TileBase tile, Vector3Int start, Vector3Int end)
+    public void Init()
+    {
+        map = this.gameObject.GetComponent<Tilemap>();
+        tile = Resources.Load<Tile>(TileName);
+
+        float PlayerSize = GameObject.Find("MainCharacter").GetComponent<SpriteRenderer>().sprite.bounds.extents.y * 2; // extends return half size
+        float TileSize = tile.sprite.bounds.extents.y * 2;
+
+        initialTileSize = (int)Mathf.Floor(mapMultiplier * PlayerSize / TileSize / 2); // on divise par 2, on va utilisé -/+ au lieu de 0/+
+
+        map.ClearAllTiles();
+    }
+
+    public void OuterBoxFill(Vector2Int innerSize, Vector2Int outerSize)
+    {
+        map.ClearAllTiles();
+
+        /*
+         * We fill 4 boxes with the points :
+         * 1 : A->B
+         * 2 : C->D
+         * 3 : C->E
+         * 4 : F->B
+         * 
+         *      A-------------------------------------------+
+         *      |                   1                       |
+         *      +---E-----------------------------------+---B
+         *      |   |                                   |   |
+         *      |   |                                   |   |
+         *      |   |                                   |   |
+         *      | 3 |                                   | 4 |
+         *      |   |                                   |   |
+         *      |   |                                   |   |
+         *      |   |                                   |   |
+         *      C---+-----------------------------------F---+
+         *      |                    2                      |
+         *      +-------------------------------------------D
+         *
+        */
+        Vector3Int A = new Vector3Int(-outerSize.x, outerSize.y, 0);
+        Vector3Int B = new Vector3Int(outerSize.x, innerSize.y, 0);
+        Vector3Int C = new Vector3Int(-outerSize.x, -innerSize.y, 0);
+        Vector3Int D = new Vector3Int(outerSize.x, -outerSize.y, 0);
+        Vector3Int E = new Vector3Int(-innerSize.x, innerSize.y, 0);
+        Vector3Int F = new Vector3Int(innerSize.x, -innerSize.y, 0);
+
+        BoxFill(A, B);
+        BoxFill(C, D);
+        BoxFill(C, E);
+        BoxFill(F, B);
+    }
+
+    public void BoxFill(Vector3Int start, Vector3Int end)
     {
         //Determine directions on X and Y axis
         var xDir = start.x < end.x ? 1 : -1;
@@ -53,8 +99,8 @@ public class MapSizeGenerator : MonoBehaviour {
     }
 
     //Small override, to allow for world position to be passed directly
-    public void BoxFill(Tilemap map, TileBase tile, Vector3 start, Vector3 end)
+    public void BoxFill(Vector3 start, Vector3 end)
     {
-        BoxFill(map, tile, map.WorldToCell(start), map.WorldToCell(end));
+        BoxFill(map.WorldToCell(start), map.WorldToCell(end));
     }
 }

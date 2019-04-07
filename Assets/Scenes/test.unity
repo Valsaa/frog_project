@@ -177,7 +177,7 @@ GameObject:
   - component: {fileID: 1048060534}
   - component: {fileID: 1048060536}
   - component: {fileID: 1048060535}
-  - component: {fileID: 1048060537}
+  - component: {fileID: 1048060538}
   m_Layer: 0
   m_Name: ZoneDangereuse
   m_TagString: Untagged
@@ -273,7 +273,7 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
---- !u!114 &1048060537
+--- !u!114 &1048060538
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -281,11 +281,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1048060533}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6840e237ccac8b049974b3b59fa8ca2c, type: 3}
+  m_Script: {fileID: 11500000, guid: 124ab486110d39440945a4910f26c39f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapMultiplier: 0
-  spriteName: 
+  mapMultiplier: 100
+  TileName: ground
 --- !u!1001 &1265931352
 Prefab:
   m_ObjectHideFlags: 0
@@ -512,11 +512,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1532686695}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6840e237ccac8b049974b3b59fa8ca2c, type: 3}
+  m_Script: {fileID: 11500000, guid: d08d295c60cf2e2429c7c56adc4a17b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapMultiplier: 100
-  spriteName: ground
+  mapMultiplier: 20
+  TileName: ground
 --- !u!1 &1653169323
 GameObject:
   m_ObjectHideFlags: 0
@@ -529,6 +529,7 @@ GameObject:
   - component: {fileID: 1653169325}
   - component: {fileID: 1653169324}
   - component: {fileID: 1653169328}
+  - component: {fileID: 1653169329}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -612,3 +613,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TexturePixelsPerWorldUnit: 1
   Zoom: 1
+--- !u!114 &1653169329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1653169323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 044e8bde07565ed48a14650b0382bde7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraBehaviour: 0
