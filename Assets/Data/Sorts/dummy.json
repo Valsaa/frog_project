@@ -1,0 +1,52 @@
+{
+    "name": "dummy",
+    "coolDown": 0.0,
+    "effectList": [
+        {
+            "name": "pouf",
+            "altHealth": 10,
+            "altKnockBack": 5,
+            "altSpeed": 0.0,
+            "lifeSpan": 0.0,
+            "silnceTime": 0.0,
+            "enracinementTime": 0.0
+        },
+		{
+            "name": "paf",
+            "altHealth": 10,
+            "altKnockBack": 5,
+            "altSpeed": 0.0,
+            "lifeSpan": 0.0,
+            "silnceTime": 0.0,
+            "enracinementTime": 0.0
+        }
+    ],
+    "projectileList": [
+        {
+            "name": "pioupiou",
+            "lifeSpan": 0.0,
+            "range": 0.0,
+            "speed": 0.0,
+            "effectList": [
+                {
+                    "name": "aie",
+                    "altHealth": -20,
+                    "altKnockBack": 0,
+                    "altSpeed": 0.0,
+                    "lifeSpan": 0.0,
+                    "silenceTime": 0.0,
+                    "enracinementTime": 0.0
+                },
+				{
+                    "name": "oui",
+                    "altHealth": 20,
+                    "altKnockBack": 0,
+                    "altSpeed": 0.0,
+                    "lifeSpan": 0.0,
+                    "silenceTime": 0.0,
+                    "enracinementTime": 0.0
+                }
+            ]
+        }
+    ]
+}
