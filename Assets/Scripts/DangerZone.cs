@@ -5,6 +5,7 @@ using UnityEngine;
 public class DangerZone : MapSizeGenerator
 {
     private int Delta = 0;
+    public 
 	// Use this for initialization
 	void Start () {
 
@@ -21,5 +22,7 @@ public class DangerZone : MapSizeGenerator
     void UpdateDangerZone()
     {
         this.OuterBoxFill(new Vector2Int(initialTileSize-Delta, initialTileSize-Delta), new Vector2Int(initialTileSize, initialTileSize));
+
+        
     }
 }

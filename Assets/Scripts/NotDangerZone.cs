@@ -5,7 +5,6 @@ using UnityEngine;
 public class NotDangerZone : MapSizeGenerator
 {
     private int currentTileSize;
-
     // Use this for initialization
     void Start () {
 
