@@ -7,16 +7,23 @@ using XDaddy.Character;
 public class MapSizeGenerator : MonoBehaviour {
 
     public int mapMultiplier = 0;
+    public string spriteName = "";
 
     // Use this for initialization
     void Start () {
-        Tile ground = Resources.Load<Tile>("ground");
+        Tile ground = Resources.Load<Tile>(spriteName);
+        if(ground == null)
+        {
+            Debug.Log("Pas de sprite selectionné, " + this.gameObject.name + " non générée.");
+            return;
+        }
+
         Tilemap map =  this.gameObject.GetComponent<Tilemap>();
         map.ClearAllTiles();
 
         float PlayerSize = GameObject.Find("MainCharacter").GetComponent<SpriteRenderer>().sprite.bounds.extents.y;
         int mapsize = (int)Mathf.Floor(mapMultiplier * (PlayerSize * 2) / (ground.sprite.bounds.extents.y * 2) /2); // on divise par 2, on va utilisé -/+ au lieu de 0/+
-        //BoxFill(map, ground, new Vector3Int(-mapsize, -mapsize, 0), new Vector3Int(mapsize, mapsize, 0));
+        BoxFill(map, ground, new Vector3Int(-mapsize, -mapsize, 0), new Vector3Int(mapsize, mapsize, 0));
         Debug.Log("created map :"+mapsize);
         
     }
