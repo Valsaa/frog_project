@@ -231,7 +231,7 @@ Prefab:
     - target: {fileID: 114684000912364254, guid: 0e081a3498d69f14bbdbba4a5eda3fdc,
         type: 2}
       propertyPath: playerSpriteSize
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 212494426318704802, guid: 0e081a3498d69f14bbdbba4a5eda3fdc,
         type: 2}
@@ -383,7 +383,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6840e237ccac8b049974b3b59fa8ca2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapsize: 0
+  mapMultiplier: 100
 --- !u!1 &1653169323
 GameObject:
   m_ObjectHideFlags: 0
