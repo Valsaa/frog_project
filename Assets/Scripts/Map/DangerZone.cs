@@ -37,7 +37,25 @@ public class DangerZone : MapSizeGenerator
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        foreach(Sort s in SortList)
+        {
+            foreach(Effect e in s.effectList)
+            {
+                collision.GetComponent<BasicCharacter>().AddEffect(e);
+            }
+        }
+        
+    }
 
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        foreach (Sort s in SortList)
+        {
+            foreach (Effect e in s.effectList)
+            {
+                collision.GetComponent<BasicCharacter>().RemoveEffect(e);
+            }
+        }
     }
 
     void UpdateDangerZone()
