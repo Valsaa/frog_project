@@ -18,6 +18,7 @@ public class MapSizeGenerator : MonoBehaviour {
     protected Tile tile;
     protected Tilemap map;
     protected int initialTileSize; // starting size of the Zone in Tile unit
+    protected TilemapCollider2D mapCollider = new TilemapCollider2D();
 
     // Use this for initialization
     void Start () {
@@ -31,6 +32,7 @@ public class MapSizeGenerator : MonoBehaviour {
     {
         map = this.gameObject.GetComponent<Tilemap>();
         tile = Resources.Load<Tile>(TileName);
+        mapCollider = new TilemapCollider2D();
 
         float PlayerSize = GameObject.Find("MainCharacter").GetComponent<SpriteRenderer>().sprite.bounds.extents.y * 2; // extends return half size
         float TileSize = tile.sprite.bounds.extents.y * 2;
@@ -38,6 +40,9 @@ public class MapSizeGenerator : MonoBehaviour {
         initialTileSize = (int)Mathf.Floor(mapMultiplier * PlayerSize / TileSize / 2); // on divise par 2, on va utilisé -/+ au lieu de 0/+
 
         map.ClearAllTiles();
+
+        mapCollider = this.gameObject.AddComponent<TilemapCollider2D>() as TilemapCollider2D;
+        mapCollider.isTrigger = true;
     }
 
     public void OuterBoxFill(Vector2Int innerSize, Vector2Int outerSize)

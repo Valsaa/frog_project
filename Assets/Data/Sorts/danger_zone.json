@@ -1,0 +1,17 @@
+{
+    "name": "DangerZone",
+    "coolDown": 0.0,
+    "effectList": [
+        {
+            "name": "OutDamage",
+            "altHealth": -10,
+            "altKnockBack": 0,
+            "altSpeed": 0.0,
+            "lifeSpan": 0.0,
+            "silnceTime": 0.0,
+            "enracinementTime": 0.0
+        }
+    ],
+    "projectileList": [
+    ]
+}

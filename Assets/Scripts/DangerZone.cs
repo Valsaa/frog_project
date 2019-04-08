@@ -13,8 +13,8 @@ public class DangerZone : MapSizeGenerator
     public List<string> SortFileNameList;
 
     private int Delta = 0;
-    private List<Sort> SortList;
-    private float LastSizeUpdate;
+    public List<Sort> SortList;
+    private float LastSizeUpdate = 0;
 	// Use this for initialization
 	void Start () {
 
@@ -23,32 +23,33 @@ public class DangerZone : MapSizeGenerator
         foreach(string sortName in SortFileNameList)
         {
             StreamReader file = new StreamReader("Assets/Data/Sorts/" + sortName + ".json", false);
-            if (file.ToString() == "")
+            if (file == null || file.ToString() == "")
             {
                 Debug.Log("can't get sort '" + sortName + "' can't open file (" + "Assets/Data/Sorts/" + sortName + ")");
-                return;
             }
-            SortList.Add(JsonUtility.FromJson<Sort>(file.ReadToEnd()));
+            else SortList.Add(JsonUtility.FromJson<Sort>(file.ReadToEnd()));
         }
-
         UpdateDangerZone();
-
-        LastSizeUpdate = Time.time;
     }
 	
 	// Update is called once per frame
 	void Update () {
 		if( (Time.time - LastSizeUpdate) >= SizeUpdatePeriod)
         {
-            Delta -= SizeReduction;
+            Delta += SizeReduction;
             UpdateDangerZone();
+            LastSizeUpdate = Time.time;
         }
 	}
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+
+    }
+
     void UpdateDangerZone()
     {
+        // update the DangerZone area TileMap and Colliders
         this.OuterBoxFill(new Vector2Int(initialTileSize-Delta, initialTileSize-Delta), new Vector2Int(initialTileSize, initialTileSize));
-
-        
     }
 }

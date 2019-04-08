@@ -249,7 +249,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1048060534}
-  - component: {fileID: 1048060537}
   - component: {fileID: 1048060536}
   - component: {fileID: 1048060535}
   - component: {fileID: 1048060538}
@@ -348,26 +347,6 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
---- !u!50 &1048060537
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1048060533}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
 --- !u!114 &1048060538
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -379,8 +358,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 124ab486110d39440945a4910f26c39f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapMultiplier: 100
+  mapMultiplier: 5
   TileName: flame
+  SizeUpdatePeriod: 10
+  SizeReduction: 1
+  SortFileNameList:
+  - danger_zone
+  SortList: []
 --- !u!1001 &1265931352
 Prefab:
   m_ObjectHideFlags: 0
@@ -418,57 +402,6 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4307226250002908, guid: 0e081a3498d69f14bbdbba4a5eda3fdc, type: 2}
       propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114625364348497200, guid: 0e081a3498d69f14bbdbba4a5eda3fdc,
-        type: 2}
-      propertyPath: active
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114625364348497200, guid: 0e081a3498d69f14bbdbba4a5eda3fdc,
-        type: 2}
-      propertyPath: mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114625364348497200, guid: 0e081a3498d69f14bbdbba4a5eda3fdc,
-        type: 2}
-      propertyPath: AxisList.Array.data[0]
-      value: Horizontal
-      objectReference: {fileID: 0}
-    - target: {fileID: 114625364348497200, guid: 0e081a3498d69f14bbdbba4a5eda3fdc,
-        type: 2}
-      propertyPath: AxisList.Array.data[1]
-      value: Vertical
-      objectReference: {fileID: 0}
-    - target: {fileID: 114625364348497200, guid: 0e081a3498d69f14bbdbba4a5eda3fdc,
-        type: 2}
-      propertyPath: UpdateCycle
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114684000912364254, guid: 0e081a3498d69f14bbdbba4a5eda3fdc,
-        type: 2}
-      propertyPath: maxSpeed
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 114684000912364254, guid: 0e081a3498d69f14bbdbba4a5eda3fdc,
-        type: 2}
-      propertyPath: groundAcceleration
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 114684000912364254, guid: 0e081a3498d69f14bbdbba4a5eda3fdc,
-        type: 2}
-      propertyPath: playerSpriteSize
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 212494426318704802, guid: 0e081a3498d69f14bbdbba4a5eda3fdc,
-        type: 2}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: e5f0a952f0d7547488b4941e016145c1,
-        type: 3}
-    - target: {fileID: 212494426318704802, guid: 0e081a3498d69f14bbdbba4a5eda3fdc,
-        type: 2}
-      propertyPath: m_SortingOrder
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -615,7 +548,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d08d295c60cf2e2429c7c56adc4a17b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapMultiplier: 20
+  mapMultiplier: 5
   TileName: ground
 --- !u!1 &1653169323
 GameObject:
@@ -712,7 +645,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TexturePixelsPerWorldUnit: 1
-  Zoom: 1
+  Zoom: 3
 --- !u!114 &1653169329
 MonoBehaviour:
   m_ObjectHideFlags: 0

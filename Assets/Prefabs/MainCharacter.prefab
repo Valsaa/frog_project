@@ -105,8 +105,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   active: 0
-  mode: 0
-  UpdateCycle: 1
+  mode: 1
+  UpdateCycle: 0
   FilePath: Temp/input.json
   manualStart: 0
   AxisList: []
@@ -122,11 +122,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbf9864df03ce52429f22296a745521b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 5
+  maxSpeed: 20
   groundAcceleration: 100
   groundDeceleration: 100
+  deltat: 2
+  playerSpriteSize: 3
   playerInput:
-    inputReplay: {fileID: 114625364348497200}
     flickAccumulationFactor: 0.8
     dragThresholdMouse: 1
     flickThreshold: 2
@@ -199,8 +200,8 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 48e48e3c5cd383645bb021d5f454fc38, type: 3}
+  m_SortingOrder: 1
+  m_Sprite: {fileID: 21300000, guid: e5f0a952f0d7547488b4941e016145c1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
