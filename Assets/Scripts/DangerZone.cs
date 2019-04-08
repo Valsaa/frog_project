@@ -20,15 +20,8 @@ public class DangerZone : MapSizeGenerator
 
         this.Init();
 
-        foreach(string sortName in SortFileNameList)
-        {
-            StreamReader file = new StreamReader("Assets/Data/Sorts/" + sortName + ".json", false);
-            if (file == null || file.ToString() == "")
-            {
-                Debug.Log("can't get sort '" + sortName + "' can't open file (" + "Assets/Data/Sorts/" + sortName + ")");
-            }
-            else SortList.Add(JsonUtility.FromJson<Sort>(file.ReadToEnd()));
-        }
+        SortList = Sort.GetSortListFromFileList(SortFileNameList);
+
         UpdateDangerZone();
     }
 	
