@@ -62,16 +62,10 @@ public class IA : BasicCharacter {
             case Status.DEP_DEF_3:
                 Vector3 playerOppositPoint = this.transform.position - player.transform.position;
                 this.MoveToPoint(playerOppositPoint);
-                if(player.gameObject.transform.childCount > 0)
+                if (IsPlayerAttacking())
                 {
-                    for(int i=0; i<player.gameObject.transform.childCount; i++)
-                    {
-                        if (player.transform.GetChild(i).name.Contains("sort"))
-                        {
-                            projectileToEsquive = player.transform.GetChild(i).transform.position;
-                            currentStatus = Status.ESQ_4;
-                        }
-                    }
+                    projectileToEsquive = player.transform.GetChild(i).transform.position;
+                    currentStatus = Status.ESQ_4;
                 }
 
                 if (currentStatus == Status.DEP_DEF_3)
@@ -81,18 +75,48 @@ public class IA : BasicCharacter {
                 Vector3 esquive = transform.position - projectileToEsquive;
                 this.MoveToPoint(this.transform.position + new Vector3(esquive.y,esquive.x,esquive.z));
 
-                foreach(Effect e in effectList)
+                foreach (Effect e in effectList)
                 {
                     if (e.name == "OutDamage")
+                    {
                         currentStatus = Status.DEP_MAP_5;
+                        break;
+                    }
                     else currentStatus = Status.AGGRO_2;
                 }
 
                 break;
             case Status.DEP_MAP_5:
+                this.MoveToPoint(new Vector3(0, 0, 0));
+                bool onFire = false;
+                foreach (Effect e in effectList)
+                {
+                    if (e.name == "OutDamage")
+                        onFire = true;
+                }
+                if (!onFire) currentStatus = Status.DEP_OFF_1;
+                else if (IsPlayerAttacking())
+                {
+                    projectileToEsquive = player.transform.GetChild(i).transform.position;
+                    currentStatus = Status.ESQ_4;
+                }
                 break;
+
         }
 	}
+
+    private bool IsPlayerAttacking()
+    {
+        if (player.gameObject.transform.childCount > 0)
+        {
+            for (int i = 0; i < player.gameObject.transform.childCount; i++)
+            {
+                if (player.transform.GetChild(i).name.Contains("sort"))
+                    return true;
+            }
+        }
+        return false;
+    }
 
     private void FixedUpdate()
     {
