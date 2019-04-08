@@ -8,13 +8,13 @@ public class BasicCharacter : MonoBehaviour {
 
     public Stats finalStats;
 
-    private List<Effect> effectList;
+    protected List<Effect> effectList;
 
     public List<string> sortFileList;
     protected List<Sort> sortList;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
 		
 	}
 	
@@ -22,11 +22,6 @@ public class BasicCharacter : MonoBehaviour {
 	void Update () {
 		
 	}
-
-    protected void init()
-    {
-        sortList = Sort.GetSortListFromFileList(sortFileList);
-    }
 
     protected void UpdateEffects ()
     {
@@ -62,7 +57,7 @@ public class BasicCharacter : MonoBehaviour {
     {
         float minRange = Vector3.Distance(this.transform.position, ennemyPosition);
         List<Sort> sortsInRange = new List<Sort>();
-
+        
         foreach (Sort s in sortList)
         {
             foreach (Projectile p in s.projectileList)
