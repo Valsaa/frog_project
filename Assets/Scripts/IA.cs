@@ -28,6 +28,7 @@ public class IA : BasicCharacter {
 	void Update ()
     {
         availableSorts = IsInRange(player.transform.position);
+        int attaque = -1;
 
         switch (currentStatus)
         {
@@ -62,9 +63,9 @@ public class IA : BasicCharacter {
             case Status.DEP_DEF_3:
                 Vector3 playerOppositPoint = this.transform.position - player.transform.position;
                 this.MoveToPoint(playerOppositPoint);
-                if (IsPlayerAttacking())
+                if ((attaque = IsPlayerAttacking()) >= 0)
                 {
-                    projectileToEsquive = player.transform.GetChild(i).transform.position;
+                    projectileToEsquive = player.transform.GetChild(attaque).transform.position;
                     currentStatus = Status.ESQ_4;
                 }
 
@@ -95,9 +96,9 @@ public class IA : BasicCharacter {
                         onFire = true;
                 }
                 if (!onFire) currentStatus = Status.DEP_OFF_1;
-                else if (IsPlayerAttacking())
+                else if ((attaque = IsPlayerAttacking()) >= 0)
                 {
-                    projectileToEsquive = player.transform.GetChild(i).transform.position;
+                    projectileToEsquive = player.transform.GetChild(attaque).transform.position;
                     currentStatus = Status.ESQ_4;
                 }
                 break;
@@ -105,17 +106,17 @@ public class IA : BasicCharacter {
         }
 	}
 
-    private bool IsPlayerAttacking()
+    private int IsPlayerAttacking()
     {
         if (player.gameObject.transform.childCount > 0)
         {
             for (int i = 0; i < player.gameObject.transform.childCount; i++)
             {
                 if (player.transform.GetChild(i).name.Contains("sort"))
-                    return true;
+                    return i;
             }
         }
-        return false;
+        return -1;
     }
 
     private void FixedUpdate()
