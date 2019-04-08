@@ -2,6 +2,9 @@
     "name": "dummy",
     "coolDown": 0.0,
 	"lastUsed": 0.0,
+	"throwSoundFile": "",
+	"travelSoundFile": "",
+	"impactSoundFile": "",
     "effectList": [
         {
             "name": "pouf",

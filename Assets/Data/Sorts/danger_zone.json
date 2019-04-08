@@ -1,6 +1,7 @@
 {
     "name": "DangerZone",
     "coolDown": 0.0,
+	"lastUsed": 0.0,
     "effectList": [
         {
             "name": "OutDamage",
