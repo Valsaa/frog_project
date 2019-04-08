@@ -9,6 +9,7 @@ public class Sort {
     public string name;
 
     public float coolDown;
+    public float lastUsed;
 
     public List<Effect> effectList = new List<Effect> ();
     public List<Projectile> projectileList = new List<Projectile> ();
