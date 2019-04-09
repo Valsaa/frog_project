@@ -11,12 +11,13 @@ public class Sort {
     public float coolDown;
     public float lastUsed;
 
+    private AudioSource SortSound;
     public string throwSoundFile;
-    public AudioSource throwSound;
+    public AudioClip throwSound;
     public string travelSoundFile;
-    public AudioSource travelSound;
+    public AudioClip travelSound;
     public string impactSoundFile;
-    public AudioSource impactSound;
+    public AudioClip impactSound;
 
     public List<Effect> effectList = new List<Effect> ();
     public List<Projectile> projectileList = new List<Projectile> ();
@@ -46,8 +47,8 @@ public class Sort {
 
     public void LoadSounds()
     {
-        throwSound = Resources.Load(throwSoundFile) as AudioSource;
-        travelSound = Resources.Load(travelSoundFile) as AudioSource;
-        impactSound = Resources.Load(impactSoundFile) as AudioSource;
+        throwSound = Resources.Load(throwSoundFile) as AudioClip;
+        travelSound = Resources.Load(travelSoundFile) as AudioClip;
+        impactSound = Resources.Load(impactSoundFile) as AudioClip;
     }
 }
