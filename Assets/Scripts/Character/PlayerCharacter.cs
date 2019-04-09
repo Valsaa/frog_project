@@ -42,6 +42,9 @@ namespace XDaddy.Character
         private Vector2 directionVector;
         private Vector2 targetPosition;
 
+        public AudioSource playerSound;
+        public AudioClip walkingSound;
+
         // Delegate
         delegate void GroundedHorizontalMovementHandler(float speedScale = 1f);
         GroundedHorizontalMovementHandler GroundedHorizontalMovement;
@@ -67,6 +70,8 @@ namespace XDaddy.Character
             {
                 GroundedHorizontalMovement = MouseGroundedHorizontalMovement;
             }
+            playerSound = this.gameObject.AddComponent<AudioSource>() as AudioSource;
+            walkingSound = Resources.Load<AudioClip>("step");
         }
         void OnEnable()
         {
@@ -79,6 +84,7 @@ namespace XDaddy.Character
         void Update()
         {
             ReadInput();
+            WalkingSound();
         }
         void FixedUpdate()
         {
@@ -111,6 +117,7 @@ namespace XDaddy.Character
             moveVector.x = Mathf.MoveTowards(moveVector.x, desiredSpeedX, acceleration * Time.deltaTime);
             moveVector.y = Mathf.MoveTowards(moveVector.y, desiredSpeedY, acceleration * Time.deltaTime);
         }
+
         private void MouseGroundedHorizontalMovement(float speedScale = 1f)
         {
             if (playerInput.MouseRight.GetDown())
@@ -160,6 +167,15 @@ namespace XDaddy.Character
             this.gameObject.GetComponent<SpriteRenderer>().sprite = selectedSprite;
         }
 
+        void WalkingSound()
+        {
+            if (characterController2D.Velocity != Vector2.zero)
+            {
+                if (!playerSound.isPlaying)
+                    playerSound.PlayOneShot(walkingSound);
+            }
+            else playerSound.Stop();
+        }
 
     }
 }
