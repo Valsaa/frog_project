@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class DangerZone : MapSizeGenerator
 {
+    [Tooltip("Map Multiplier value for inner starting size")]
+    public int innerSize = 0;
     [ Tooltip ("en secondes") ]
     public int SizeUpdatePeriod;
     [ Tooltip ("par cran de 64px") ]
@@ -12,7 +14,7 @@ public class DangerZone : MapSizeGenerator
     [ Tooltip ("nom du fichier sans le .json") ]
     public List<string> SortFileNameList;
 
-    private int Delta = 0;
+    private int Delta = 80;
     public List<Sort> SortList;
     private float LastSizeUpdate = 0;
 	// Use this for initialization
@@ -21,6 +23,8 @@ public class DangerZone : MapSizeGenerator
         this.Init();
 
         SortList = Sort.GetSortListFromFileList(SortFileNameList);
+
+        Delta = mapMultiplier - innerSize;
 
         UpdateDangerZone();
     }

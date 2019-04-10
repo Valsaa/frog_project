@@ -382,8 +382,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 124ab486110d39440945a4910f26c39f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapMultiplier: 5
+  mapMultiplier: 100
   TileName: flame
+  initialTileSize: 0
+  innerSize: 20
   SizeUpdatePeriod: 10
   SizeReduction: 1
   SortFileNameList:
@@ -572,8 +574,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d08d295c60cf2e2429c7c56adc4a17b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapMultiplier: 5
+  mapMultiplier: 20
   TileName: ground
+  initialTileSize: 0
   SortFileNameList: []
   SortList: []
 --- !u!1 &1653169323

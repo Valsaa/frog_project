@@ -17,7 +17,7 @@ public class MapSizeGenerator : MonoBehaviour {
 
     protected Tile tile;
     protected Tilemap map;
-    protected int initialTileSize; // starting size of the Zone in Tile unit
+    public int initialTileSize; // starting size of the Zone in Tile unit
     protected TilemapCollider2D mapCollider = new TilemapCollider2D();
 
     // Use this for initialization

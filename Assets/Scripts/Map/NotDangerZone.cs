@@ -9,7 +9,6 @@ public class NotDangerZone : MapSizeGenerator
 
     public List<Sort> SortList;
 
-    private int currentTileSize;
     // Use this for initialization
     void Start () {
 
