@@ -6,40 +6,18 @@ using XDaddy.Character;
 
 public class MapSizeGenerator : MonoBehaviour {
 
-    [
-        Tooltip ("Taille Initial de la zone en unitée du Player")
-    ]
-    public int mapMultiplier = 0;
-    [
-         Tooltip ("nom du fichier contenant le Tile à utilisé (exemple 'ground' pour ground.assset)")   
-    ]
+    [Tooltip ("nom du fichier contenant le Tile à utilisé (exemple 'ground' pour ground.assset)")   ]
     public string TileName = "";
 
     protected Tile tile;
     protected Tilemap map;
-    public int initialTileSize; // starting size of the Zone in Tile unit
     protected TilemapCollider2D mapCollider = new TilemapCollider2D();
 
-    // Use this for initialization
-    void Start () {
-    }
-	
-	// Update is called once per frame
-	void Update () {
-	}
-
-    public void Init()
+    public void InitTileMap()
     {
         map = this.gameObject.GetComponent<Tilemap>();
         tile = Resources.Load<Tile>(TileName);
         mapCollider = new TilemapCollider2D();
-
-        float PlayerSize = GameObject.Find("MainCharacter").GetComponent<SpriteRenderer>().sprite.bounds.extents.y * 2; // extends return half size
-        float TileSize = tile.sprite.bounds.extents.y * 2;
-
-        initialTileSize = (int)Mathf.Floor(mapMultiplier * PlayerSize / TileSize / 2); // on divise par 2, on va utilisé -/+ au lieu de 0/+
-
-        map.ClearAllTiles();
 
         mapCollider = this.gameObject.AddComponent<TilemapCollider2D>() as TilemapCollider2D;
         mapCollider.isTrigger = true;
@@ -47,10 +25,8 @@ public class MapSizeGenerator : MonoBehaviour {
 
     public void OuterBoxFill(Vector2Int innerSize, Vector2Int outerSize)
     {
-        map.ClearAllTiles();
-
         /*
-         * We fill 4 boxes with the points :
+         * We fill 4 boxes with 6 points :
          * 1 : A->B
          * 2 : C->D
          * 3 : C->E
@@ -108,4 +84,5 @@ public class MapSizeGenerator : MonoBehaviour {
     {
         BoxFill(map.WorldToCell(start), map.WorldToCell(end));
     }
+
 }
