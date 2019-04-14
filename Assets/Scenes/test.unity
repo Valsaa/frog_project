@@ -383,8 +383,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TileName: flame
-  mapOutMultiplier: 0
-  mapInMultiplier: 0
+  mapOutMultiplier: 100
+  mapInMultiplier: 20
   SizeUpdatePeriod: 10
   SizeReduction: 1
   SortFileNameList:
