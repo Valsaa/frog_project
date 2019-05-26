@@ -11,8 +11,8 @@ public class Effect
     public int altKnockBack;
     public float altSpeed;
     public float lifeSpan;
-    public float silenceTime;
-    public float enracinementTime;
+    public bool silence;
+    public bool enracinement;
 
     public Effect()
     {

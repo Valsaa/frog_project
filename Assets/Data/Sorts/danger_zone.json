@@ -8,9 +8,9 @@
             "altHealth": -10,
             "altKnockBack": 0,
             "altSpeed": 0.0,
-            "lifeSpan": 0.0,
-            "silnceTime": 0.0,
-            "enracinementTime": 0.0
+            "lifeSpan": 999999,
+            "silnceTime": 0,
+            "enracinementTime": 0
         }
     ],
     "projectileList": [

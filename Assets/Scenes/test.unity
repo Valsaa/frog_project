@@ -197,8 +197,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f6e58f67f374dd4498897b84d681b96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseStats: {fileID: 0}
-  finalStats: {fileID: 0}
+  baseStats:
+    health: 0
+    knockBack: 0
+    speed: 0
+  finalStats:
+    health: 0
+    knockBack: 0
+    speed: 0
+  effectList: []
   sortFileList: []
   currentStatus: 0
 --- !u!212 &760179320
@@ -438,6 +445,26 @@ Prefab:
     - target: {fileID: 114684000912364254, guid: 0e081a3498d69f14bbdbba4a5eda3fdc,
         type: 2}
       propertyPath: playerSpriteSize
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114684000912364254, guid: 0e081a3498d69f14bbdbba4a5eda3fdc,
+        type: 2}
+      propertyPath: baseStats.speed
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 114684000912364254, guid: 0e081a3498d69f14bbdbba4a5eda3fdc,
+        type: 2}
+      propertyPath: baseStats.health
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 114684000912364254, guid: 0e081a3498d69f14bbdbba4a5eda3fdc,
+        type: 2}
+      propertyPath: groundAcceleration
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114684000912364254, guid: 0e081a3498d69f14bbdbba4a5eda3fdc,
+        type: 2}
+      propertyPath: groundDeceleration
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []

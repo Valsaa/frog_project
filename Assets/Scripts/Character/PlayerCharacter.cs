@@ -12,7 +12,7 @@ namespace XDaddy.Character
 
     [RequireComponent(typeof(CharacterController2D))]
     [RequireComponent(typeof(Animator))]
-    public class PlayerCharacter : MonoBehaviour
+    public class PlayerCharacter : BasicCharacter
     {
         // Instance
         protected static PlayerCharacter instance;
@@ -36,6 +36,7 @@ namespace XDaddy.Character
         [SerializeField]
         private PlayerInput playerInput = new PlayerInput();
         private CharacterController2D characterController2D;
+        private Collider2D characterCollider;
         private Animator animator;
 
         private Vector2 moveVector;
@@ -62,6 +63,8 @@ namespace XDaddy.Character
         }
         void Start()
         {
+            this.UpdateStats();
+
             if (inputMouvementBy == InputMouvementBy.Keyboard)
             {
                 GroundedHorizontalMovement = KeyboardGroundedHorizontalMovement;
@@ -104,8 +107,8 @@ namespace XDaddy.Character
 
         private void KeyboardGroundedHorizontalMovement(float speedScale = 1f)
         {
-            float desiredSpeedX = playerInput.Horizontal.GetValue() * maxSpeed * speedScale;
-            float desiredSpeedY = playerInput.Vertical.GetValue() * maxSpeed * speedScale;
+            float desiredSpeedX = playerInput.Horizontal.GetValue() * this.finalStats.speed/*maxSpeed*/ * speedScale;
+            float desiredSpeedY = playerInput.Vertical.GetValue() * this.finalStats.speed/*maxSpeed*/ * speedScale;
             float acceleration = playerInput.ReceivingInputMovement() ? groundAcceleration : groundDeceleration;
 
             if (playerInput.Horizontal.ReceivingInput() && playerInput.Vertical.ReceivingInput())
@@ -125,7 +128,7 @@ namespace XDaddy.Character
                 targetPosition = Camera.main.ScreenToWorldPoint(playerInput.Mouse.GetCurrentPosition());
 
                 directionVector = targetPosition - (Vector2)transform.position;
-                directionVector = directionVector.normalized * maxSpeed * speedScale;
+                directionVector = directionVector.normalized * this.finalStats.speed/*maxSpeed*/ * speedScale;
             }
 
             float distance = Vector2.Distance((Vector2)transform.position, targetPosition);
@@ -165,16 +168,18 @@ namespace XDaddy.Character
             }
             Debug.Log("loaded sprite : " + selectedSprite.name);
             this.gameObject.GetComponent<SpriteRenderer>().sprite = selectedSprite;
+
+            this.characterCollider = this.gameObject.AddComponent<BoxCollider2D>();
         }
 
         void WalkingSound()
-        {
+        {/*
             if (characterController2D.Velocity != Vector2.zero)
             {
                 if (!playerSound.isPlaying)
                     playerSound.PlayOneShot(walkingSound);
             }
-            else playerSound.Stop();
+            else playerSound.Stop();*/
         }
 
     }

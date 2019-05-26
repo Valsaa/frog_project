@@ -11,7 +11,6 @@ public class Sort {
     public float coolDown;
     public float lastUsed;
 
-    private AudioSource SortSound;
     public string throwSoundFile;
     public AudioClip throwSound;
     public string travelSoundFile;

@@ -4,24 +4,18 @@ using UnityEngine;
 
 public class BasicCharacter : MonoBehaviour {
 
+    [Tooltip("stats de base du character")]
     public Stats baseStats;
-
+    [Tooltip("ne pas toucher")]
     public Stats finalStats;
 
-    protected List<Effect> effectList;
+    public List<Effect> effectList;
 
     public List<string> sortFileList;
     protected List<Sort> sortList;
 
-    // Use this for initialization
-    void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    protected bool canMove = true;
+    protected bool canPlay = true;
 
     protected void UpdateEffects ()
     {
@@ -30,7 +24,7 @@ public class BasicCharacter : MonoBehaviour {
             if (e.lifeSpan > 0)
             {
                 e.lifeSpan -= 1;
-                this.ApplyEffect(e);
+                this.ReApplyEffect(e);
             }
             else this.effectList.Remove(e);
         }
@@ -38,7 +32,20 @@ public class BasicCharacter : MonoBehaviour {
 
     protected void ApplyEffect(Effect e)
     {
+        ReApplyEffect(e);
+        finalStats.speed += e.altSpeed;
+    }
 
+    protected void ReApplyEffect(Effect e)
+    {
+        finalStats.health += e.altHealth;
+        if ((finalStats.knockBack += e.altKnockBack) < 0)
+        {
+            this.PushBack(finalStats.knockBack);
+            finalStats.knockBack = 0;
+        }
+        if (e.silence) canPlay = false;
+        if(e.enracinement) canMove = false;
     }
 
     public void AddEffect (Effect e)
@@ -71,5 +78,17 @@ public class BasicCharacter : MonoBehaviour {
         }
 
         return sortsInRange;
+    }
+
+    public void PushBack(int knockbackValue)
+    {
+
+    }
+
+    public void UpdateStats()
+    {
+        finalStats.health = baseStats.health;
+        finalStats.knockBack = baseStats.knockBack;
+        finalStats.speed = baseStats.speed;
     }
 }
