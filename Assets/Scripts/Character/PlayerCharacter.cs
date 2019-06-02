@@ -23,10 +23,10 @@ namespace XDaddy.Character
 
         // public parameters
         public InputMouvementBy inputMouvementBy = InputMouvementBy.Keyboard;
-        [Range(1f, 200f)] public float maxSpeed = 5f;
-        [Range(1f, 1000f)] public float groundAcceleration = 100f;
-        [Range(1f, 1000f)] public float groundDeceleration = 100f;
-        public float deltat = 2;
+        [Range(1f, 200f)] public float maxSpeed = 10f;
+        [Range(1f, 1000f)] public float groundAcceleration = 50f;
+        [Range(1f, 1000f)] public float groundDeceleration = 50f;
+        [Range(0.01f, 10f)] public float deltat = 0.02f;
 
         // private parameters
         [SerializeField]
@@ -35,8 +35,11 @@ namespace XDaddy.Character
         private Animator animator;
 
         private Vector2 moveVector;
-        private Vector2 directionVector;
         private Vector2 targetPosition;
+        private Vector2 directionVector;
+        private bool isInMovement;
+        private bool isInDeceleration;
+        private float currentSpeed;
 
         // Delegate
         delegate void GroundedHorizontalMovementHandler(float speedScale = 1f);
@@ -77,7 +80,7 @@ namespace XDaddy.Character
         }
         void FixedUpdate()
         {
-            characterController2D.Move(moveVector * Time.deltaTime);
+            characterController2D.Move(moveVector /* Time.deltaTime*/);
         }
 
         // Private function
@@ -111,23 +114,60 @@ namespace XDaddy.Character
             if (playerInput.MouseRight.GetDown())
             {
                 targetPosition = Camera.main.ScreenToWorldPoint(playerInput.Mouse.GetCurrentPosition());
-
-                directionVector = targetPosition - (Vector2)transform.position;
-                directionVector = directionVector.normalized * maxSpeed * speedScale;
+                directionVector = (targetPosition - (Vector2)transform.position).normalized;
+                currentSpeed = 0f;
+                isInMovement = true;
+                isInDeceleration = false;
             }
 
-            float distance = Vector2.Distance((Vector2)transform.position, targetPosition);
-            if (distance < deltat * 0.1)
+            // Check if the flag for movement is true
+            if (isInMovement)
             {
-                moveVector = new Vector2(0, 0);
-            }
-            else if (distance < deltat)
+                // Calcul the distance to decelerate
+                //float decelerationDistance = currentSpeed * Time.deltaTime + (0.5f * groundDeceleration * Time.deltaTime * Time.deltaTime);
+                float decelerationDistance = (currentSpeed * currentSpeed) / (2 * groundDeceleration);
+                // Calcul the remaining distance
+                float remainingDistance = Vector3.Distance(transform.position, targetPosition);
+
+                if (!isInDeceleration && decelerationDistance < remainingDistance)
+                {
+                    // Calcul the current speed with acceleration
+                    currentSpeed = Mathf.MoveTowards(currentSpeed, maxSpeed * speedScale, groundAcceleration * Time.deltaTime);
+                }
+                else
+                {
+                    // Calcul the current speed with deceleration
+                    currentSpeed = Mathf.MoveTowards(currentSpeed, 0, groundDeceleration * Time.deltaTime);
+                    isInDeceleration = true;
+                }
+
+                Debug.Log("currentSpeed : " + currentSpeed + " // " + decelerationDistance + " // " + remainingDistance);
+
+                // Define the new move vector
+                //moveVector = Vector3.MoveTowards(moveVector, directionVector, currentSpeed * Time.deltaTime);
+                moveVector = directionVector * currentSpeed * Time.deltaTime;
+
+                // Check if the current gameObject position and the clicked position are equal
+                if (currentSpeed == 0 || remainingDistance <= deltat)
+                {
+                    // Set the movement indicator flag to false                                      
+                    isInMovement = false;
+                    currentSpeed = 0;
+                    moveVector = new Vector2(0, 0);
+                    Debug.Log("I am here");
+                }
+            }          
+            
+        }
+
+
+        // Just for visualizing the decelerate radius around the target
+        private void OnDrawGizmos()
+        {
+            if (isInMovement)
             {
-                moveVector = Vector2.MoveTowards(moveVector, directionVector, groundDeceleration * Time.deltaTime);
-            }
-            else
-            {
-                moveVector = Vector2.MoveTowards(moveVector, directionVector, groundAcceleration * Time.deltaTime);
+                float decelerationDistance = (currentSpeed * currentSpeed) / (2 * groundDeceleration);
+                Gizmos.DrawWireSphere(targetPosition, decelerationDistance);
             }
         }
 
