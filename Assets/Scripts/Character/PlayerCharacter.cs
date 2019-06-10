@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using B2B.GameKit.Maths;
+
 namespace XDaddy.Character
 {
     public enum InputMouvementBy
     {
         Keyboard,
         Mouse,
+        MouseSmoothStep
     }
 
     [RequireComponent(typeof(CharacterController2D))]
@@ -42,8 +45,8 @@ namespace XDaddy.Character
         private float currentSpeed;
 
         // Delegate
-        delegate void GroundedHorizontalMovementHandler(float speedScale = 1f);
-        GroundedHorizontalMovementHandler GroundedHorizontalMovement;
+        delegate void Grounded2DMovementHandler(float speedScale = 1f);
+        Grounded2DMovementHandler Grounded2DMovement;
 
         // Unity 3D function
         void Awake()
@@ -59,11 +62,15 @@ namespace XDaddy.Character
         {
             if (inputMouvementBy == InputMouvementBy.Keyboard)
             {
-                GroundedHorizontalMovement = KeyboardGroundedHorizontalMovement;
+                Grounded2DMovement = KeyboardGrounded2DMovement;
             }
-            else // InputMouvementBy.Mouse
+            else if (inputMouvementBy == InputMouvementBy.Mouse)
             {
-                GroundedHorizontalMovement = MouseGroundedHorizontalMovement;
+                Grounded2DMovement = MouseGrounded2DMovement;
+            }
+            else // InputMouvementBy.MouseSmoothStep
+            {
+                Grounded2DMovement = MouseGrounded2DMovement_SmoothStep;
             }
         }
         void OnEnable()
@@ -83,18 +90,20 @@ namespace XDaddy.Character
             characterController2D.Move(moveVector /* Time.deltaTime*/);
         }
 
-        // Private function
+        /***************************************************************
+         *                      Private function
+        ***************************************************************/
         private void ReadInput()
         {
             // Get all inputs
             playerInput.GetInputs();
 
             // Use all inputs
-            GroundedHorizontalMovement();
+            Grounded2DMovement();
             //animator.SetFloat("IsRunning", moveVector.normalized.magnitude);
         }
 
-        private void KeyboardGroundedHorizontalMovement(float speedScale = 1f)
+        private void KeyboardGrounded2DMovement(float speedScale = 1f)
         {
             float desiredSpeedX = playerInput.Horizontal.GetValue() * maxSpeed * speedScale;
             float desiredSpeedY = playerInput.Vertical.GetValue() * maxSpeed * speedScale;
@@ -109,7 +118,7 @@ namespace XDaddy.Character
             moveVector.x = Mathf.MoveTowards(moveVector.x, desiredSpeedX, acceleration * Time.deltaTime);
             moveVector.y = Mathf.MoveTowards(moveVector.y, desiredSpeedY, acceleration * Time.deltaTime);
         }
-        private void MouseGroundedHorizontalMovement(float speedScale = 1f)
+        private void MouseGrounded2DMovement(float speedScale = 1f)
         {
             if (playerInput.MouseRight.GetDown())
             {
@@ -140,11 +149,8 @@ namespace XDaddy.Character
                     currentSpeed = Mathf.MoveTowards(currentSpeed, 0, groundDeceleration * Time.deltaTime);
                     isInDeceleration = true;
                 }
-
-                Debug.Log("currentSpeed : " + currentSpeed + " // " + decelerationDistance + " // " + remainingDistance);
-
+                
                 // Define the new move vector
-                //moveVector = Vector3.MoveTowards(moveVector, directionVector, currentSpeed * Time.deltaTime);
                 moveVector = directionVector * currentSpeed * Time.deltaTime;
 
                 // Check if the current gameObject position and the clicked position are equal
@@ -159,15 +165,54 @@ namespace XDaddy.Character
             }          
             
         }
+        private void MouseGrounded2DMovement_SmoothStep(float speedScale = 1f)
+        {
+            if (playerInput.MouseRight.GetDown())
+            {
+                targetPosition = Camera.main.ScreenToWorldPoint(playerInput.Mouse.GetCurrentPosition());
+                directionVector = (targetPosition - (Vector2)transform.position).normalized;
+                isInMovement = true;
+            }
 
+            // Check if the flag for movement is true
+            if (isInMovement)
+            {
+                // Calcul the current speed
+                float speed = Maths.BlendingSmoothStep(0.1f, 0.2f, 0.9f, 1.0f, Time.deltaTime) * maxSpeed;             
+
+                // Define the new move vector
+                moveVector = directionVector * speed;
+                
+                // Check if the current gameObject position and the clicked position are equal
+                if (Vector3.Distance(transform.position, targetPosition) <= deltat)
+                {
+                    // Set the movement indicator flag to false                                      
+                    isInMovement = false;
+                    moveVector = new Vector2(0, 0);
+                    Debug.Log("I am here");
+                }
+            }
+
+        }
 
         // Just for visualizing the decelerate radius around the target
         private void OnDrawGizmos()
         {
             if (isInMovement)
             {
-                float decelerationDistance = (currentSpeed * currentSpeed) / (2 * groundDeceleration);
-                Gizmos.DrawWireSphere(targetPosition, decelerationDistance);
+                if (inputMouvementBy == InputMouvementBy.Keyboard)
+                {
+
+                }
+                else if (inputMouvementBy == InputMouvementBy.Mouse)
+                {
+                    float decelerationDistance = (currentSpeed * currentSpeed) / (2 * groundDeceleration);
+                    Gizmos.DrawWireSphere(targetPosition, decelerationDistance);
+                }
+                else // InputMouvementBy.MouseSmoothStep
+                {
+                }
+                
             }
         }
 
