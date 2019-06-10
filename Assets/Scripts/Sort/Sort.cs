@@ -32,16 +32,27 @@ public class Sort {
 
         foreach (string sortName in FileList)
         {
-            StreamReader file = new StreamReader("Assets/Data/Sorts/" + sortName + ".json", false);
-
-            if (file == null || file.ToString() == "")
-            {
-                Debug.Log("can't get sort '" + sortName + "' can't open file (" + "Assets/Data/Sorts/" + sortName + ")");
-            }
-            else SortList.Add(JsonUtility.FromJson<Sort>(file.ReadToEnd()));
+            Sort newSort = Sort.GetSortFromFile(sortName);
+            if (newSort != null)
+                SortList.Add(newSort);
         }
 
         return SortList;
+    }
+
+    public static Sort GetSortFromFile(string FileName)
+    {
+        Sort s = null;
+
+        StreamReader file = new StreamReader("Assets/Data/Sorts/" + FileName + ".json", false);
+
+        if (file == null || file.ToString() == "")
+        {
+            Debug.Log("can't get sort '" + FileName + "' can't open file (" + "Assets/Data/Sorts/" + FileName + ")");
+        }
+        else s = JsonUtility.FromJson<Sort>(file.ReadToEnd());
+
+        return s;
     }
 
     public void LoadSounds()
