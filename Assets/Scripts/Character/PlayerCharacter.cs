@@ -35,6 +35,13 @@ namespace XDaddy.Character
         // private parameters
         [SerializeField]
         private PlayerInput playerInput = new PlayerInput();
+
+        // gestion des sorts
+        private Sort selectedSort;
+        [Tooltip("nom du fichier sans le .json")]
+        public List<string> SortFileNameList;
+        public List<Sort> SortList;
+
         private CharacterController2D characterController2D;
         private Collider2D characterCollider;
         private Animator animator;
@@ -64,6 +71,8 @@ namespace XDaddy.Character
         void Start()
         {
             this.UpdateStats();
+
+            SortList = Sort.GetSortListFromFileList(SortFileNameList);
 
             if (inputMouvementBy == InputMouvementBy.Keyboard)
             {
@@ -103,6 +112,8 @@ namespace XDaddy.Character
             // Use all inputs
             GroundedHorizontalMovement();
             //animator.SetFloat("IsRunning", moveVector.normalized.magnitude);
+
+            ManageSorts();
         }
 
         private void KeyboardGroundedHorizontalMovement(float speedScale = 1f)
@@ -170,6 +181,18 @@ namespace XDaddy.Character
             this.gameObject.GetComponent<SpriteRenderer>().sprite = selectedSprite;
 
             this.characterCollider = this.gameObject.AddComponent<BoxCollider2D>();
+        }
+
+        void ManageSorts()
+        {
+            // manage Sort selection
+            if (playerInput.A.GetDown())
+                selectedSort = sortList.ToArray()[0];
+
+            if (playerInput.MouseLeft.GetDown())
+            {
+
+            }
         }
 
         void WalkingSound()

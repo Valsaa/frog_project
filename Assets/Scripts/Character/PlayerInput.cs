@@ -45,6 +45,20 @@ namespace XDaddy.Character
         private InputMouse mouse = new InputMouse();
         public InputMouse Mouse { get { return mouse; } }
 
+        // abilities
+        [SerializeField]
+        private KeyboardButton a = new KeyboardButton(KeyCode.A);
+        public KeyboardButton A { get { return a; } }
+        [SerializeField]
+        private KeyboardButton z = new KeyboardButton(KeyCode.Z);
+        public KeyboardButton Z { get { return z; } }
+        [SerializeField]
+        private KeyboardButton e = new KeyboardButton(KeyCode.E);
+        public KeyboardButton E { get { return e; } }
+        [SerializeField]
+        private KeyboardButton r = new KeyboardButton(KeyCode.R);
+        public KeyboardButton R { get { return r; } }
+
 
         [SerializeField]
         private KeyboardButton debugMenuIsOpen = new KeyboardButton(KeyCode.F12);
@@ -66,6 +80,11 @@ namespace XDaddy.Character
             ReadInput(mouseRight);
             ReadInput(mouseMiddle);
             ReadInput(mouse);
+
+            ReadInput(a);
+            ReadInput(z);
+            ReadInput(e);
+            ReadInput(r);
         }
 
         // PUBLIC 
