@@ -1,0 +1,37 @@
+{
+    "name": "fireball",
+    "coolDown": 3.0,
+	"lastUsed": 0.0,
+	"throwSoundFile": "",
+	"travelSoundFile": "",
+	"impactSoundFile": "",
+    "effectList": [],
+    "projectileList": [
+        {
+            "name": "fireball",
+            "lifeSpan": 0.0,
+            "range": 0.0,
+            "speed": 0.0,
+            "effectList": [
+                {
+                    "name": "impact_feu",
+                    "altHealth": -20,
+                    "altKnockBack": 0,
+                    "altSpeed": 0.0,
+                    "lifeSpan": 0.0,
+                    "silenceTime": 0.0,
+                    "enracinementTime": 0.0
+                },
+				{
+                    "name": "recule",
+                    "altHealth": 20,
+                    "altKnockBack": 0,
+                    "altSpeed": 0.0,
+                    "lifeSpan": 0.0,
+                    "silenceTime": 0.0,
+                    "enracinementTime": 0.0
+                }
+            ]
+        }
+    ]
+}
