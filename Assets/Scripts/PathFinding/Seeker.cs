@@ -6,12 +6,12 @@ using System.Threading;
 
 public class Seeker : MonoBehaviour
 {
-    static Seeker instance;
+   // static Seeker instance;
     
 
     void Awake()
     {
-        instance = this;
+        //instance = this;
     }
 	
 	void Update ()

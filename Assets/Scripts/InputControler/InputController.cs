@@ -196,7 +196,7 @@ namespace B2B.GameKit.InputController
             private float totalMovement;            // Total movement for this pointer, since being held down
             
             private bool mouseMovedOnThisFrame;     // Tracks if the mouse moved on this frame
-            private bool startedOverUI;             // Tracks if this pointer began over UI
+            //private bool startedOverUI;             // Tracks if this pointer began over UI
 
             private bool startedDrag = false;       // Did it just start now?
             private bool endDrag = false;           // Did it just end now?
@@ -484,13 +484,13 @@ namespace B2B.GameKit.InputController
             /// <summary>
             /// Tracks if this pointer began over UI
             /// </summary>
-            public bool StartedOverUI()
+            /*public bool StartedOverUI()
             {
                 if (!enabled)
                     return false;
 
                 return startedOverUI;
-            }           
+            }   */        
         }
 
         [Serializable]

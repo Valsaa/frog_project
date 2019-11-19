@@ -9,7 +9,6 @@ namespace XDaddy.Character
     public class CharacterController2D : MonoBehaviour
     {
         // Parameters        
-        private CapsuleCollider2D capsule;
         private Vector2 previousPosition;
         private Vector2 currentPosition;
         private Vector2 nextMovement;
@@ -24,7 +23,6 @@ namespace XDaddy.Character
         void Awake()
         {
             rigidbody2D = GetComponent<Rigidbody2D>();
-            capsule = GetComponent<CapsuleCollider2D>();
 
             currentPosition = rigidbody2D.position;
             previousPosition = rigidbody2D.position;

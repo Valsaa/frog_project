@@ -41,14 +41,14 @@ namespace XDaddy.Character
         private PlayerInput playerInput = new PlayerInput();
 
         // gestion des sorts
-        private Sort selectedSort;
+        // private Sort selectedSort;
         [Tooltip("nom du fichier sans le .json")]
         public List<string> SortFileNameList;
         public List<Sort> SortList;
 
         private CharacterController2D characterController2D;
-        private Collider2D characterCollider;
-        private Animator animator;
+        //private Collider2D characterCollider;
+        //private Animator animator;
 
         private Vector2 moveVector;
         private Vector2 targetPosition;
@@ -71,7 +71,7 @@ namespace XDaddy.Character
             else                    throw new UnityException("There cannot be more than one PlayerCharacter script.  The instances are " + instance.name + " and " + name + ".");
 
             characterController2D = GetComponent<CharacterController2D>();
-            animator = GetComponent<Animator>();
+            // animator = GetComponent<Animator>();
 
             SetupSprite();
         }
@@ -266,14 +266,14 @@ namespace XDaddy.Character
             Debug.Log("loaded sprite : " + selectedSprite.name);
             this.gameObject.GetComponent<SpriteRenderer>().sprite = selectedSprite;
 
-            this.characterCollider = this.gameObject.AddComponent<BoxCollider2D>();
+            // this.characterCollider = this.gameObject.AddComponent<BoxCollider2D>();
         }
 
         void ManageSorts()
         {
             // manage Sort selection
             if (playerInput.A.GetDown())
-                selectedSort = sortList.ToArray()[0];
+                //selectedSort = sortList.ToArray()[0];
 
             if (playerInput.MouseLeft.GetDown())
             {
