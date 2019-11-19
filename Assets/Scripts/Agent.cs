@@ -1,0 +1,138 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+
+public class Agent : MonoBehaviour
+{
+    //Variables
+    private SteeringBehavior2D steering2D;
+    private Vector2 nextPosition;
+
+    [SerializeField]
+    private float maxForce = 0.1f;
+    public float MaxForce
+    {
+        get
+        {
+            return maxForce;
+        }
+        set
+        {
+            if (value < 0)
+            {
+                maxForce = 0.1f;
+            }
+            else
+            {
+                maxForce = value;
+            }
+        }
+    }
+    [SerializeField]
+    private float maxSpeed = 4;
+    public float MaxSpeed
+    {
+        get
+        {
+            return maxSpeed;
+        }
+        set
+        {
+            if (value < maxForce)
+            {
+                maxSpeed = maxForce;
+            }
+            else
+            {
+                maxSpeed = value;
+            }
+        }
+    }
+    [SerializeField]
+    const float mass = 1;
+    public float Mass
+    {
+        get
+        {
+            return mass;
+        }
+        /*set
+        {
+            if (value < 0)
+            {
+                mass = 0.001f;
+            }
+            else
+            {
+                mass = value;
+            }
+        }*/
+    }
+
+    private Vector2 velocity = new Vector2(0, 0);
+    public Vector2 Velocity
+    {
+        get
+        {
+            return velocity;
+        }
+    }
+
+    public float slowingRadius = 1.0f;
+
+    /*
+     *  PUBLIC FUNCTION
+     */
+    public Vector2 GetPosition()
+    {
+        return transform.position;
+    }
+    public Quaternion GetRotation()
+    {
+        return transform.rotation;
+    }
+    public float GetSpeed()
+    {
+        return velocity.magnitude;
+    }
+
+    public void SetInitialVelocity(Vector2 velocity)
+    {
+        this.velocity = velocity;
+    }
+
+
+    /*
+     *  UNITY 3D FUNCTION
+     */
+    void Start()
+    {
+        steering2D = new SteeringBehavior2D(this);
+    }
+
+    void Update()
+    {
+        // Get mouse position
+        if (Input.GetMouseButtonUp(0))
+        {
+            Vector3 VScreen = new Vector3();
+            Vector3 VWold = new Vector3();
+
+            VScreen.x = Input.mousePosition.x;
+            VScreen.y = Input.mousePosition.y;
+            VScreen.z = Camera.main.transform.position.z;
+            VWold = Camera.main.ScreenToWorldPoint(VScreen);
+
+            //nextPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            steering2D.Arrive_On(VWold, slowingRadius);
+        }
+
+        Vector2 steeringForce = steering2D.Calcule();
+        steeringForce = steeringForce / mass;
+
+        velocity = Vector2.ClampMagnitude(velocity + steeringForce, maxSpeed);
+
+        transform.position = transform.position + (new Vector3(velocity.x, velocity.y, 0) * Time.fixedDeltaTime);
+    }
+}
