@@ -246,7 +246,7 @@ namespace XDaddy.Character
         void SetupSprite ()
         {
             // load the correct player sprite
-            Sprite selectedSprite = new Sprite();
+            Sprite selectedSprite = null;
             switch (playerSpriteSize)
             {
                 case SpriteSize._32x32PX:
