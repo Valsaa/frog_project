@@ -29,18 +29,12 @@ namespace XDaddy.Character
 
         // public parameters
         public InputMouvementBy inputMouvementBy = InputMouvementBy.Keyboard;
-<<<<<<< HEAD
         [Range(1f, 200f)] public float maxSpeed = 5f;
         [Range(1f, 1000f)] public float groundAcceleration = 100f;
         [Range(1f, 1000f)] public float groundDeceleration = 100f;
         public float deltat = 2;
         public SpriteSize playerSpriteSize;
-=======
-        [Range(1f, 200f)] public float maxSpeed = 10f;
-        [Range(1f, 1000f)] public float groundAcceleration = 50f;
-        [Range(1f, 1000f)] public float groundDeceleration = 50f;
-        [Range(0.01f, 10f)] public float deltat = 0.02f;
->>>>>>> master
+
 
         // private parameters
         [SerializeField]
@@ -150,26 +144,16 @@ namespace XDaddy.Character
             moveVector.x = Mathf.MoveTowards(moveVector.x, desiredSpeedX, acceleration * Time.deltaTime);
             moveVector.y = Mathf.MoveTowards(moveVector.y, desiredSpeedY, acceleration * Time.deltaTime);
         }
-<<<<<<< HEAD
 
-        private void MouseGroundedHorizontalMovement(float speedScale = 1f)
-=======
         private void MouseGrounded2DMovement(float speedScale = 1f)
->>>>>>> master
         {
             if (playerInput.MouseRight.GetDown())
             {
                 targetPosition = Camera.main.ScreenToWorldPoint(playerInput.Mouse.GetCurrentPosition());
-<<<<<<< HEAD
-
-                directionVector = targetPosition - (Vector2)transform.position;
-                directionVector = directionVector.normalized * this.finalStats.speed/*maxSpeed*/ * speedScale;
-=======
                 directionVector = (targetPosition - (Vector2)transform.position).normalized;
                 currentSpeed = 0f;
                 isInMovement = true;
                 isInDeceleration = false;
->>>>>>> master
             }
 
             // Check if the flag for movement is true
