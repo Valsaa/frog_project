@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using B2B.GameKit.Maths;
+
 namespace XDaddy.Character
 {
     public enum InputMouvementBy
     {
         Keyboard,
         Mouse,
+        MouseSmoothStep
     }
 
     [RequireComponent(typeof(CharacterController2D))]
@@ -26,11 +29,18 @@ namespace XDaddy.Character
 
         // public parameters
         public InputMouvementBy inputMouvementBy = InputMouvementBy.Keyboard;
+<<<<<<< HEAD
         [Range(1f, 200f)] public float maxSpeed = 5f;
         [Range(1f, 1000f)] public float groundAcceleration = 100f;
         [Range(1f, 1000f)] public float groundDeceleration = 100f;
         public float deltat = 2;
         public SpriteSize playerSpriteSize;
+=======
+        [Range(1f, 200f)] public float maxSpeed = 10f;
+        [Range(1f, 1000f)] public float groundAcceleration = 50f;
+        [Range(1f, 1000f)] public float groundDeceleration = 50f;
+        [Range(0.01f, 10f)] public float deltat = 0.02f;
+>>>>>>> master
 
         // private parameters
         [SerializeField]
@@ -47,15 +57,18 @@ namespace XDaddy.Character
         private Animator animator;
 
         private Vector2 moveVector;
-        private Vector2 directionVector;
         private Vector2 targetPosition;
+        private Vector2 directionVector;
+        private bool isInMovement;
+        private bool isInDeceleration;
+        private float currentSpeed;
 
         public AudioSource playerSound;
         public AudioClip walkingSound;
 
         // Delegate
-        delegate void GroundedHorizontalMovementHandler(float speedScale = 1f);
-        GroundedHorizontalMovementHandler GroundedHorizontalMovement;
+        delegate void Grounded2DMovementHandler(float speedScale = 1f);
+        Grounded2DMovementHandler Grounded2DMovement;
 
         // Unity 3D function
         void Awake()
@@ -76,11 +89,15 @@ namespace XDaddy.Character
 
             if (inputMouvementBy == InputMouvementBy.Keyboard)
             {
-                GroundedHorizontalMovement = KeyboardGroundedHorizontalMovement;
+                Grounded2DMovement = KeyboardGrounded2DMovement;
             }
-            else // InputMouvementBy.Mouse
+            else if (inputMouvementBy == InputMouvementBy.Mouse)
             {
-                GroundedHorizontalMovement = MouseGroundedHorizontalMovement;
+                Grounded2DMovement = MouseGrounded2DMovement;
+            }
+            else // InputMouvementBy.MouseSmoothStep
+            {
+                Grounded2DMovement = MouseGrounded2DMovement_SmoothStep;
             }
             playerSound = this.gameObject.AddComponent<AudioSource>() as AudioSource;
             walkingSound = Resources.Load<AudioClip>("step");
@@ -100,23 +117,25 @@ namespace XDaddy.Character
         }
         void FixedUpdate()
         {
-            characterController2D.Move(moveVector * Time.deltaTime);
+            characterController2D.Move(moveVector /* Time.deltaTime*/);
         }
 
-        // Private function
+        /***************************************************************
+         *                      Private function
+        ***************************************************************/
         private void ReadInput()
         {
             // Get all inputs
             playerInput.GetInputs();
 
             // Use all inputs
-            GroundedHorizontalMovement();
+            Grounded2DMovement();
             //animator.SetFloat("IsRunning", moveVector.normalized.magnitude);
 
             ManageSorts();
         }
 
-        private void KeyboardGroundedHorizontalMovement(float speedScale = 1f)
+        private void KeyboardGrounded2DMovement(float speedScale = 1f)
         {
             float desiredSpeedX = playerInput.Horizontal.GetValue() * this.finalStats.speed/*maxSpeed*/ * speedScale;
             float desiredSpeedY = playerInput.Vertical.GetValue() * this.finalStats.speed/*maxSpeed*/ * speedScale;
@@ -131,29 +150,112 @@ namespace XDaddy.Character
             moveVector.x = Mathf.MoveTowards(moveVector.x, desiredSpeedX, acceleration * Time.deltaTime);
             moveVector.y = Mathf.MoveTowards(moveVector.y, desiredSpeedY, acceleration * Time.deltaTime);
         }
+<<<<<<< HEAD
 
         private void MouseGroundedHorizontalMovement(float speedScale = 1f)
+=======
+        private void MouseGrounded2DMovement(float speedScale = 1f)
+>>>>>>> master
         {
             if (playerInput.MouseRight.GetDown())
             {
                 targetPosition = Camera.main.ScreenToWorldPoint(playerInput.Mouse.GetCurrentPosition());
+<<<<<<< HEAD
 
                 directionVector = targetPosition - (Vector2)transform.position;
                 directionVector = directionVector.normalized * this.finalStats.speed/*maxSpeed*/ * speedScale;
+=======
+                directionVector = (targetPosition - (Vector2)transform.position).normalized;
+                currentSpeed = 0f;
+                isInMovement = true;
+                isInDeceleration = false;
+>>>>>>> master
             }
 
-            float distance = Vector2.Distance((Vector2)transform.position, targetPosition);
-            if (distance < deltat * 0.1)
+            // Check if the flag for movement is true
+            if (isInMovement)
             {
-                moveVector = new Vector2(0, 0);
+                // Calcul the distance to decelerate
+                //float decelerationDistance = currentSpeed * Time.deltaTime + (0.5f * groundDeceleration * Time.deltaTime * Time.deltaTime);
+                float decelerationDistance = (currentSpeed * currentSpeed) / (2 * groundDeceleration);
+                // Calcul the remaining distance
+                float remainingDistance = Vector3.Distance(transform.position, targetPosition);
+
+                if (!isInDeceleration && decelerationDistance < remainingDistance)
+                {
+                    // Calcul the current speed with acceleration
+                    currentSpeed = Mathf.MoveTowards(currentSpeed, maxSpeed * speedScale, groundAcceleration * Time.deltaTime);
+                }
+                else
+                {
+                    // Calcul the current speed with deceleration
+                    currentSpeed = Mathf.MoveTowards(currentSpeed, 0, groundDeceleration * Time.deltaTime);
+                    isInDeceleration = true;
+                }
+                
+                // Define the new move vector
+                moveVector = directionVector * currentSpeed * Time.deltaTime;
+
+                // Check if the current gameObject position and the clicked position are equal
+                if (currentSpeed == 0 || remainingDistance <= deltat)
+                {
+                    // Set the movement indicator flag to false                                      
+                    isInMovement = false;
+                    currentSpeed = 0;
+                    moveVector = new Vector2(0, 0);
+                    Debug.Log("I am here");
+                }
+            }          
+            
+        }
+        private void MouseGrounded2DMovement_SmoothStep(float speedScale = 1f)
+        {
+            if (playerInput.MouseRight.GetDown())
+            {
+                targetPosition = Camera.main.ScreenToWorldPoint(playerInput.Mouse.GetCurrentPosition());
+                directionVector = (targetPosition - (Vector2)transform.position).normalized;
+                isInMovement = true;
             }
-            else if (distance < deltat)
+
+            // Check if the flag for movement is true
+            if (isInMovement)
             {
-                moveVector = Vector2.MoveTowards(moveVector, directionVector, groundDeceleration * Time.deltaTime);
+                // Calcul the current speed
+                float speed = Maths.BlendingSmoothStep(0.1f, 0.2f, 0.9f, 1.0f, Time.deltaTime) * maxSpeed;             
+
+                // Define the new move vector
+                moveVector = directionVector * speed;
+                
+                // Check if the current gameObject position and the clicked position are equal
+                if (Vector3.Distance(transform.position, targetPosition) <= deltat)
+                {
+                    // Set the movement indicator flag to false                                      
+                    isInMovement = false;
+                    moveVector = new Vector2(0, 0);
+                    Debug.Log("I am here");
+                }
             }
-            else
+
+        }
+
+        // Just for visualizing the decelerate radius around the target
+        private void OnDrawGizmos()
+        {
+            if (isInMovement)
             {
-                moveVector = Vector2.MoveTowards(moveVector, directionVector, groundAcceleration * Time.deltaTime);
+                if (inputMouvementBy == InputMouvementBy.Keyboard)
+                {
+
+                }
+                else if (inputMouvementBy == InputMouvementBy.Mouse)
+                {
+                    float decelerationDistance = (currentSpeed * currentSpeed) / (2 * groundDeceleration);
+                    Gizmos.DrawWireSphere(targetPosition, decelerationDistance);
+                }
+                else // InputMouvementBy.MouseSmoothStep
+                {
+                }
+                
             }
         }
 
