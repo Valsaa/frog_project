@@ -4,8 +4,12 @@
 TagManager:
   serializedVersion: 2
   tags:
+<<<<<<< HEAD
   - TauntUI
   - persoAction
+=======
+  - Wall
+>>>>>>> master
   layers:
   - Default
   - TransparentFX
@@ -15,9 +19,9 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
+  - Ground
+  - Road
+  - Wall
   - 
   - 
   - 
