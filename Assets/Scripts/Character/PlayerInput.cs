@@ -8,56 +8,27 @@ namespace XDaddy.Character
     [Serializable]
     public class PlayerInput : InputController
     {
-        // Inputs  
+        // Inputs :
         [SerializeField]
         private KeyboardButton pause = new KeyboardButton(KeyCode.Escape);
         public KeyboardButton Pause { get { return pause; } }
 
         [SerializeField]
-        private KeyboardButton interact = new KeyboardButton(KeyCode.E);
-        public KeyboardButton Interact { get { return interact; } }
-
-        [SerializeField]
-        private KeyboardButton jump = new KeyboardButton(KeyCode.Space);
-        public KeyboardButton Jump { get { return jump; } }
-
-        [SerializeField]
-        private Axis horizontal = new Axis(AxisType.Horizontal);
-        public Axis Horizontal { get { return horizontal; } }
-
-        [SerializeField]
-        private Axis vertical = new Axis(AxisType.Vertical);
-        public Axis Vertical { get { return vertical; } }
-
-        [SerializeField]
-        private MouseButton mouseLeft = new MouseButton(MouseButtonType.MouseLeft);
-        public MouseButton MouseLeft { get { return mouseLeft; } }
-
-        [SerializeField]
-        private MouseButton mouseRight = new MouseButton(MouseButtonType.MouseRight);
-        public MouseButton MouseRight { get { return mouseRight; } }
-
-        [SerializeField]
-        private MouseButton mouseMiddle = new MouseButton(MouseButtonType.MouseMiddle);
-        public MouseButton MouseMiddle { get { return mouseMiddle; } }
-
-        [SerializeField]
         private InputMouse mouse = new InputMouse();
         public InputMouse Mouse { get { return mouse; } }
 
-        // abilities
         [SerializeField]
-        private KeyboardButton a = new KeyboardButton(KeyCode.A);
-        public KeyboardButton A { get { return a; } }
+        private KeyboardButton action1 = new KeyboardButton(KeyCode.A);
+        public KeyboardButton Action1 { get { return action1; } }
         [SerializeField]
-        private KeyboardButton z = new KeyboardButton(KeyCode.Z);
-        public KeyboardButton Z { get { return z; } }
+        private KeyboardButton action2 = new KeyboardButton(KeyCode.Z);
+        public KeyboardButton Action2 { get { return action2; } }
         [SerializeField]
-        private KeyboardButton e = new KeyboardButton(KeyCode.E);
-        public KeyboardButton E { get { return e; } }
+        private KeyboardButton action3 = new KeyboardButton(KeyCode.E);
+        public KeyboardButton Action3 { get { return action3; } }
         [SerializeField]
-        private KeyboardButton r = new KeyboardButton(KeyCode.R);
-        public KeyboardButton R { get { return r; } }
+        private KeyboardButton action4 = new KeyboardButton(KeyCode.R);
+        public KeyboardButton Action4 { get { return action4; } }
 
 
         [SerializeField]
@@ -72,25 +43,20 @@ namespace XDaddy.Character
         public override void GetInputs()
         {
             ReadInput(pause);
-            ReadInput(interact);
-            ReadInput(jump);
-            ReadInput(horizontal);
-            ReadInput(vertical);
-            ReadInput(mouseLeft);
-            ReadInput(mouseRight);
-            ReadInput(mouseMiddle);
             ReadInput(mouse);
 
-            ReadInput(a);
-            ReadInput(z);
-            ReadInput(e);
-            ReadInput(r);
+            ReadInput(action1);
+            ReadInput(action2);
+            ReadInput(action3);
+            ReadInput(action4);
+
+            ReadInput(debugMenuIsOpen);
         }
 
         // PUBLIC 
         public bool ReceivingInputMovement()
         {
-            return horizontal.ReceivingInput() || vertical.ReceivingInput();
+            return mouse.ReceivingInput();
         }
 
 

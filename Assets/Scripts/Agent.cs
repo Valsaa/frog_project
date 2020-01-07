@@ -2,13 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using XDaddy.Character;
 
 public class Agent : MonoBehaviour
 {
-    //Variables
+    // Private parameters
+    [SerializeField]
+    private PlayerInput playerInput = new PlayerInput();
     private SteeringBehavior2D steering2D;
     private Vector2 nextPosition;
 
+    // Public parameters
     [SerializeField]
     private float maxForce = 0.1f;
     public float MaxForce
@@ -92,11 +96,11 @@ public class Agent : MonoBehaviour
     {
         return transform.rotation;
     }
+
     public float GetSpeed()
     {
         return velocity.magnitude;
     }
-
     public void SetInitialVelocity(Vector2 velocity)
     {
         this.velocity = velocity;
@@ -113,19 +117,13 @@ public class Agent : MonoBehaviour
 
     void Update()
     {
+        playerInput.GetInputs();
+
         // Get mouse position
-        if (Input.GetMouseButtonUp(0))
+        if (playerInput.Mouse.ButtonRight.GetDown())
         {
-            Vector3 VScreen = new Vector3();
-            Vector3 VWold = new Vector3();
-
-            VScreen.x = Input.mousePosition.x;
-            VScreen.y = Input.mousePosition.y;
-            VScreen.z = Camera.main.transform.position.z;
-            VWold = Camera.main.ScreenToWorldPoint(VScreen);
-
-            //nextPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            steering2D.Arrive_On(VWold, slowingRadius);
+            nextPosition = playerInput.Mouse.ScreenToWorldPoint2D();
+            steering2D.Arrive_On(nextPosition, slowingRadius);
         }
 
         Vector2 steeringForce = steering2D.Calcule();

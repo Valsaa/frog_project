@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 158836336}
   - component: {fileID: 158836339}
   m_Layer: 0
-  m_Name: Big Demon
+  m_Name: Agent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -233,9 +233,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 641b3523fff198242b8f6c4b2b806ffe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerInput:
+    dragThresholdMouse: 1
+    holdTime: 0.8
+    tapTime: 0.2
+    doubleTapTime: 0.2
+    pause:
+      enabled: 1
+      key: 27
+    mouse:
+      enabled: 1
+    action1:
+      enabled: 1
+      key: 97
+    action2:
+      enabled: 1
+      key: 122
+    action3:
+      enabled: 1
+      key: 101
+    action4:
+      enabled: 1
+      key: 114
+    debugMenuIsOpen:
+      enabled: 1
+      key: 293
   maxForce: 0.1
-  maxSpeed: 4
-  slowingRadius: 1.5
+  maxSpeed: 2
+  slowingRadius: 0.5
 --- !u!1 &170076733
 GameObject:
   m_ObjectHideFlags: 0
