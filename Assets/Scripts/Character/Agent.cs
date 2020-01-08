@@ -110,12 +110,16 @@ public class Agent : MonoBehaviour
     /*
      *  UNITY 3D FUNCTION
      */
-    void Start()
+    protected virtual void Awake()
+    {
+    }
+
+    protected virtual void Start()
     {
         steering2D = new SteeringBehavior2D(this);
     }
 
-    void Update()
+    protected virtual void Update()
     {
         playerInput.GetInputs();
 
@@ -133,4 +137,10 @@ public class Agent : MonoBehaviour
 
         transform.position = transform.position + (new Vector3(velocity.x, velocity.y, 0) * Time.fixedDeltaTime);
     }
+
+    protected virtual void FixedUpdate()
+    {
+    }
+
+
 }

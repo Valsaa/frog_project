@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 158836336}
   - component: {fileID: 158836339}
   m_Layer: 0
-  m_Name: Agent
+  m_Name: MainCharacter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -230,7 +230,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 158836335}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 641b3523fff198242b8f6c4b2b806ffe, type: 3}
+  m_Script: {fileID: 11500000, guid: a0c165b7c4314714d9b24dbaf84ae8fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   playerInput:
