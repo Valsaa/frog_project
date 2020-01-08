@@ -131,23 +131,23 @@ namespace XDaddy.Character
 
         private void KeyboardGrounded2DMovement(float speedScale = 1f)
         {
-            float desiredSpeedX = playerInput.Horizontal.GetValue() * this.finalStats.speed/*maxSpeed*/ * speedScale;
-            float desiredSpeedY = playerInput.Vertical.GetValue() * this.finalStats.speed/*maxSpeed*/ * speedScale;
-            float acceleration = playerInput.ReceivingInputMovement() ? groundAcceleration : groundDeceleration;
-
-            if (playerInput.Horizontal.ReceivingInput() && playerInput.Vertical.ReceivingInput())
-            {
-                desiredSpeedX *= 0.7071f;
-                desiredSpeedY *= 0.7071f;
-            }
-
-            moveVector.x = Mathf.MoveTowards(moveVector.x, desiredSpeedX, acceleration * Time.deltaTime);
-            moveVector.y = Mathf.MoveTowards(moveVector.y, desiredSpeedY, acceleration * Time.deltaTime);
+            // float desiredSpeedX = playerInput.Horizontal.GetValue() * this.finalStats.speed/*maxSpeed*/ * speedScale;
+            // float desiredSpeedY = playerInput.Vertical.GetValue() * this.finalStats.speed/*maxSpeed*/ * speedScale;
+            // float acceleration = playerInput.ReceivingInputMovement() ? groundAcceleration : groundDeceleration;
+            // 
+            // if (playerInput.Horizontal.ReceivingInput() && playerInput.Vertical.ReceivingInput())
+            // {
+            //     desiredSpeedX *= 0.7071f;
+            //     desiredSpeedY *= 0.7071f;
+            // }
+            // 
+            // moveVector.x = Mathf.MoveTowards(moveVector.x, desiredSpeedX, acceleration * Time.deltaTime);
+            // moveVector.y = Mathf.MoveTowards(moveVector.y, desiredSpeedY, acceleration * Time.deltaTime);
         }
 
         private void MouseGrounded2DMovement(float speedScale = 1f)
         {
-            if (playerInput.MouseRight.GetDown())
+            if (playerInput.Mouse.ButtonRight.GetDown())
             {
                 targetPosition = Camera.main.ScreenToWorldPoint(playerInput.Mouse.GetCurrentPosition());
                 directionVector = (targetPosition - (Vector2)transform.position).normalized;
@@ -194,7 +194,7 @@ namespace XDaddy.Character
         }
         private void MouseGrounded2DMovement_SmoothStep(float speedScale = 1f)
         {
-            if (playerInput.MouseRight.GetDown())
+            if (playerInput.Mouse.ButtonRight.GetDown())
             {
                 targetPosition = Camera.main.ScreenToWorldPoint(playerInput.Mouse.GetCurrentPosition());
                 directionVector = (targetPosition - (Vector2)transform.position).normalized;
@@ -272,10 +272,10 @@ namespace XDaddy.Character
         void ManageSorts()
         {
             // manage Sort selection
-            if (playerInput.A.GetDown())
+            if (playerInput.Action1.GetDown())
                 //selectedSort = sortList.ToArray()[0];
 
-            if (playerInput.MouseLeft.GetDown())
+            if (playerInput.Mouse.ButtonLeft.GetDown())
             {
 
             }

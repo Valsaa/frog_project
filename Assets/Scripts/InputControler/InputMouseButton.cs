@@ -4,13 +4,17 @@ using UnityEngine;
 
 namespace B2B.GameKit.InputController
 {
-    public abstract class InputButton
+    public abstract class InputMouseButton
     {
         [SerializeField]
         protected bool enabled = true;
 
         protected StateButton state;            // State of the button
         protected float startTime;              // Time hold started
+        private float totalMovement;            // Total movement for this pointer, since being held down
+        
+        private bool startedDrag = false;       // Did it just start now?
+        private bool endDrag = false;           // Did it just end now?
 
         protected bool startedHold = false;     // Did it just start now?
         protected bool endHold = false;         // Did it just end now?    
@@ -20,15 +24,17 @@ namespace B2B.GameKit.InputController
         protected bool canDoubleTap = false;    // Check if you can double tap
         protected float startDoubleTapTime;     // Time doubleTap started
 
+        //private bool startedOverUI;             // Tracks if this pointer began over UI
+
         // Constructor
-        public InputButton()
+        public InputMouseButton()
         {
         }
 
         /// <summary>
         /// Interpret this Input
         /// </summary>
-        protected virtual void InterpretInput(bool inputValue, float holdTime, float tapTime, float doubleTapTime)
+        protected virtual void InterpretInput(bool inputValue, Vector2 deltaPosition, float dragThresholdMouse, float holdTime, float tapTime, float doubleTapTime)
         {
             if (!enabled)
                 return;
@@ -36,18 +42,21 @@ namespace B2B.GameKit.InputController
             // Reset each frame, need to be triggered only once
             startedHold = false;
             endHold = false;
+            startedDrag = false;
+            endDrag = false;
             isTapped = false;
             isDoubleTapped = false;
 
             if (inputValue)
             {
-                switch(state)
+                switch (state)
                 {
                     case StateButton.UP:
                     case StateButton.NONE:
                         {
                             state = StateButton.DOWN;
                             startTime = Time.realtimeSinceStartup;
+                            totalMovement = 0;
                         }
                         break;
 
@@ -55,6 +64,14 @@ namespace B2B.GameKit.InputController
                     case StateButton.HELD:
                         {
                             state = StateButton.HELD;
+                            totalMovement += deltaPosition.magnitude;
+
+                            // Dragging?                            
+                            if (totalMovement > dragThresholdMouse)
+                            {
+                                state = StateButton.DRAG;
+                                startedDrag = true;
+                            }
 
                             // Stationary? (Hold)
                             if (Time.realtimeSinceStartup - startTime >= holdTime)
@@ -62,6 +79,26 @@ namespace B2B.GameKit.InputController
                                 startedHold = true;
                                 state = StateButton.HOLD;
                             }
+                        }
+                        break;
+
+                    case StateButton.HOLD:
+                        {
+                            totalMovement += deltaPosition.magnitude;
+
+                            // Dragging?
+                            if (totalMovement > dragThresholdMouse)
+                            {
+                                state = StateButton.DRAG;
+                                startedDrag = true;
+                                endHold = true;
+                            }
+                        }
+                        break;
+
+                    case StateButton.DRAG:
+                        {
+                            totalMovement += deltaPosition.magnitude;
                         }
                         break;
                 }
@@ -101,17 +138,26 @@ namespace B2B.GameKit.InputController
                         }
                         break;
 
+                    case StateButton.DRAG:
+                        {
+                            state = StateButton.UP;
+                            endDrag = true;
+                        }
+                        break;
+
                     case StateButton.UP:
                         {
                             // Reset the state machine
                             state = StateButton.NONE;
                             startTime = 0;
+                            totalMovement = 0;
                         }
                         break;
                 }
             }
         }
 
+        
         /// <summary>
         /// Is this mouse button down 
         /// </summary>
@@ -166,6 +212,37 @@ namespace B2B.GameKit.InputController
         /// <summary>
         /// Did it just start now?
         /// </summary>
+        public bool StartedDrag()
+        {
+            if (!enabled)
+                return false;
+
+            return startedDrag;
+        }
+        /// <summary>
+        /// Did it just end now?
+        /// </summary>
+        public bool EndDrag()
+        {
+            if (!enabled)
+                return false;
+
+            return endDrag;
+        }
+        /// <summary>
+        /// Is this input dragged ?
+        /// </summary>
+        public bool IsDragging()
+        {
+            if (!enabled)
+                return false;
+
+            return state == StateButton.DRAG && !startedDrag && !endDrag;
+        }
+
+        /// <summary>
+        /// Did it just start now?
+        /// </summary>
         public bool StartedHold()
         {
             if (!enabled)
@@ -204,6 +281,16 @@ namespace B2B.GameKit.InputController
 
             return startTime;
         }
+        /// <summary>
+        /// Total movement for this pointer, since being held down
+        /// </summary>
+        public float GetTotalMovement()
+        {
+            if (!enabled)
+                return 0f;
+
+            return totalMovement;
+        }
 
         /// <summary>
         /// Check if the value has been updated
@@ -212,6 +299,17 @@ namespace B2B.GameKit.InputController
         {
             return state != StateButton.NONE;
         }
+
+        /// <summary>
+        /// Tracks if this pointer began over UI
+        /// </summary>
+        /*public bool StartedOverUI()
+        {
+            if (!enabled)
+                return false;
+
+            return startedOverUI;
+        }*/
 
         /// <summary>
         /// Enable this input

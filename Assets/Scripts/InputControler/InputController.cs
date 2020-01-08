@@ -70,20 +70,10 @@ namespace B2B.GameKit.InputController
         };
 
         /// <summary>
-        /// How quickly flick velocity is accumulated with movements
-        /// </summary>
-        [SerializeField]
-        protected float flickAccumulationFactor = 0.8f;
-        /// <summary>
         /// How far mouse must move before starting a drag
         /// </summary>
         [SerializeField]
         protected float dragThresholdMouse = 1.0f;
-        /// <summary>
-        /// Flick movement threshold
-        /// </summary>
-        [SerializeField]
-        protected float flickThreshold = 2f;
         /// <summary>
         /// How long before a touch is considered a hold
         /// </summary>
@@ -117,9 +107,9 @@ namespace B2B.GameKit.InputController
             /// <summary>
             /// Update this Input
             /// </summary>
-            public void ReadInput(float flickAccumulationFactor, float dragThresholdMouse, float flickThreshold, float holdTime, float tapTime, float doubleTapTime)
+            public void ReadInput(float holdTime, float tapTime, float doubleTapTime)
             {
-                InterpretInput(InputReplay.Instance.GetKey(key), flickAccumulationFactor, dragThresholdMouse, flickThreshold, holdTime, tapTime, doubleTapTime);
+                InterpretInput(Input.GetKey(key), holdTime, tapTime, doubleTapTime);
             }
 
             /// <summary>
@@ -147,9 +137,9 @@ namespace B2B.GameKit.InputController
             /// <summary>
             /// Update this Input
             /// </summary>
-            public void ReadInput(float flickAccumulationFactor, float dragThresholdMouse, float flickThreshold, float holdTime, float tapTime, float doubleTapTime)
+            public void ReadInput(float holdTime, float tapTime, float doubleTapTime)
             {
-                //InterpretInput(InputReplay.Instance.GetKey(XboxButtonTypeToName[(int)controllerButton]), flickAccumulationFactor, dragThresholdMouse, flickThreshold, holdTime, tapTime, doubleTapTime);
+                //InterpretInput(InputReplay.Instance.GetKey(XboxButtonTypeToName[(int)controllerButton]), holdTime, tapTime, doubleTapTime);
             }
 
             /// <summary>
@@ -184,22 +174,9 @@ namespace B2B.GameKit.InputController
         }
 
         [Serializable]
-        public class MouseButton : InputButton
+        public class MouseButton : InputMouseButton
         {            
             public MouseButtonType keyMouse;
-
-            private Vector2 startPosition;          // Position where the input started
-            private Vector2 currentPosition;        // Current pointer position
-            private Vector2 previousPosition;       // Previous frame's pointer position
-            private Vector2 deltaPosition;          // Movement delta for this frame
-            private Vector2 flickVelocity;          // Flick velocity is a moving average of deltas
-            private float totalMovement;            // Total movement for this pointer, since being held down
-            
-            private bool mouseMovedOnThisFrame;     // Tracks if the mouse moved on this frame
-            //private bool startedOverUI;             // Tracks if this pointer began over UI
-
-            private bool startedDrag = false;       // Did it just start now?
-            private bool endDrag = false;           // Did it just end now?
             
             // Constructor
             public MouseButton(MouseButtonType keyMouse)
@@ -208,289 +185,12 @@ namespace B2B.GameKit.InputController
             }
 
             /// <summary>
-            /// Determine the flick velocity
-            /// </summary>
-            private void Flick(float flickAccumulationFactor, float flickThreshold)
-            {
-                float moveDist = deltaPosition.magnitude;
-                totalMovement += moveDist;
-
-                // Flick?
-                if (moveDist > flickThreshold)
-                {
-                    flickVelocity = (flickVelocity * (1 - flickAccumulationFactor)) + (deltaPosition * flickAccumulationFactor);
-                }
-                else
-                {
-                    flickVelocity = Vector2.zero;
-                }
-            }
-
-            /// <summary>
-            /// Interpret this Input
-            /// </summary>
-            protected override void InterpretInput(bool inputValue, float flickAccumulationFactor, float dragThresholdMouse, float flickThreshold, float holdTime, float tapTime, float doubleTapTime)
-            {
-                if (!enabled)
-                    return;
-
-                // Get mouse data
-                previousPosition = currentPosition;
-                currentPosition = InputReplay.Instance.mousePosition;
-                deltaPosition = currentPosition - previousPosition;
-                mouseMovedOnThisFrame = deltaPosition.sqrMagnitude >= Mathf.Epsilon;
-
-                // Reset each frame, need to be triggered only once
-                startedHold = false;
-                endHold = false;
-                startedDrag = false;
-                endDrag = false;
-                isTapped = false;
-                isDoubleTapped = false;
-
-                if (inputValue)
-                {
-                    switch (state)
-                    {
-                        case StateButton.UP:
-                        case StateButton.NONE:
-                            {
-                                state = StateButton.DOWN;
-
-                                // First press
-                                startTime = Time.realtimeSinceStartup;
-                                startPosition = InputReplay.Instance.mousePosition;
-                                //startedOverUI = EventSystem.current.IsPointerOverGameObject( (int)keyMouse - 1 );
-
-                                // Reset some stuff
-                                totalMovement = 0;
-                                flickVelocity = Vector2.zero;
-                            }
-                            break;
-
-                        case StateButton.DOWN:
-                        case StateButton.HELD:
-                            {
-                                state = StateButton.HELD;
-
-                                // Flick?
-                                Flick(flickAccumulationFactor, flickThreshold);
-
-                                // Dragging?
-                                if (totalMovement > dragThresholdMouse)
-                                {
-                                    state = StateButton.DRAG;
-                                    startedDrag = true;
-                                }
-
-                                // Stationary? (Hold)
-                                if (Time.realtimeSinceStartup - startTime >= holdTime)
-                                {
-                                    startedHold = true;
-                                    state = StateButton.HOLD;
-                                }
-                            }
-                            break;
-
-                        case StateButton.HOLD:
-                            {
-                                // Flick?
-                                Flick(flickAccumulationFactor, flickThreshold);
-
-                                // Dragging?
-                                if (totalMovement > dragThresholdMouse)
-                                {
-                                    state = StateButton.DRAG;
-                                    startedDrag = true;
-                                    endHold = true;
-                                }
-                            }
-                            break;
-
-                        case StateButton.DRAG:
-                            {
-                                // Flick?
-                                Flick(flickAccumulationFactor, flickThreshold);
-                            }
-                            break;
-                    }
-                }
-                else
-                {
-                    switch (state)
-                    {
-                        case StateButton.DOWN:
-                        case StateButton.HELD:
-                            {
-                                state = StateButton.UP;
-
-                                // Quick enough (with no drift) to be a tap?
-                                if (Time.realtimeSinceStartup - startTime < tapTime)
-                                {
-                                    // Is a Double tap ?
-                                    if (canDoubleTap && Time.realtimeSinceStartup - startDoubleTapTime <= doubleTapTime + tapTime)
-                                    {
-                                        isDoubleTapped = true;
-                                        canDoubleTap = false;
-                                    }
-                                    else
-                                    {
-                                        isTapped = true;
-                                        canDoubleTap = true;
-                                        startDoubleTapTime = Time.realtimeSinceStartup;
-                                    }
-                                }
-                            }
-                            break;
-
-                        case StateButton.HOLD:
-                            {
-                                state = StateButton.UP;
-                                endHold = true;
-                            }
-                            break;
-
-                        case StateButton.DRAG:
-                            {
-                                state = StateButton.UP;
-                                endDrag = true;
-                            }
-                            break;
-
-                        case StateButton.UP:
-                            {
-                                // Reset the state machine
-                                state = StateButton.NONE;
-                                startTime = 0;
-                                totalMovement = 0;
-                                flickVelocity = Vector2.zero;
-                            }
-                            break;
-                    }
-                }
-            }
-            
-
-            /// <summary>
             /// Update this Input
             /// </summary>
-            public void ReadInput(float flickAccumulationFactor, float dragThresholdMouse, float flickThreshold, float holdTime, float tapTime, float doubleTapTime)
+            public void ReadInput(Vector2 deltaPosition, float dragThresholdMouse, float holdTime, float tapTime, float doubleTapTime)
             {
-                InterpretInput(InputReplay.Instance.GetMouseButton((int)keyMouse), flickAccumulationFactor, dragThresholdMouse, flickThreshold, holdTime, tapTime, doubleTapTime);
-            }
-            
-            /// <summary>
-            /// Did it just start now?
-            /// </summary>
-            public bool StartedDrag()
-            {
-                if (!enabled)
-                    return false;
-
-                return startedDrag;
-            }
-            /// <summary>
-            /// Did it just end now?
-            /// </summary>
-            public bool EndDrag()
-            {
-                if (!enabled)
-                    return false;
-
-                return endDrag;
-            }
-            /// <summary>
-            /// Is this input dragged ?
-            /// </summary>
-            public bool IsDragging()
-            {
-                if (!enabled)
-                    return false;
-
-                return state == StateButton.DRAG && !startedDrag && !endDrag;
-            }
-                        
-            /// <summary>
-            /// Position where the input started
-            /// </summary>
-            public Vector2 GetStartPosition()
-            {
-                if (!enabled)
-                    return Vector2.zero;
-
-                return startPosition;
-            }
-            /// <summary>
-            /// Current pointer position
-            /// </summary>
-            public Vector2 GetCurrentPosition()
-            {
-                if (!enabled)
-                    return Vector2.zero;
-
-                return currentPosition;
-            }
-            /// <summary>
-            /// Previous frame's pointer position
-            /// </summary>
-            public Vector2 GetPreviousPosition()
-            {
-                if (!enabled)
-                    return Vector2.zero;
-
-                return previousPosition;
-            }
-            /// <summary>
-            /// Movement delta for this frame
-            /// </summary>
-            public Vector2 GetDeltaPosition()
-            {
-                if (!enabled)
-                    return Vector2.zero;
-
-                return deltaPosition;
-            }
-            /// <summary>
-            /// Flick velocity is a moving average of deltas
-            /// </summary>
-            public Vector2 GetFlickVelocity()
-            {
-                if (!enabled)
-                    return Vector2.zero;
-
-                return flickVelocity;
-            }
-            /// <summary>
-            /// Total movement for this pointer, since being held down
-            /// </summary>
-            public float GetTotalMovement()
-            {
-                if (!enabled)
-                    return 0f;
-
-                return totalMovement;
-            }
-            
-            /// <summary>
-            /// Tracks if the mouse moved on this frame
-            /// </summary>
-            public bool MouseMovedOnThisFrame()
-            {
-                if (!enabled)
-                    return false;
-
-                return mouseMovedOnThisFrame;
-            }
-            /// <summary>
-            /// Tracks if this pointer began over UI
-            /// </summary>
-            /*public bool StartedOverUI()
-            {
-                if (!enabled)
-                    return false;
-
-                return startedOverUI;
-            }   */        
+                InterpretInput(Input.GetMouseButton((int)keyMouse), deltaPosition, dragThresholdMouse, holdTime, tapTime, doubleTapTime);
+            }      
         }
 
         [Serializable]
@@ -499,10 +199,16 @@ namespace B2B.GameKit.InputController
             [SerializeField]
             protected bool enabled = true;
 
+            private MouseButton buttonLeft = new MouseButton(MouseButtonType.MouseLeft);
+            public MouseButton ButtonLeft { get { return buttonLeft; } }
+            private MouseButton buttonRight = new MouseButton(MouseButtonType.MouseRight);
+            public MouseButton ButtonRight { get { return buttonRight; } }
+            private MouseButton buttonMiddle = new MouseButton(MouseButtonType.MouseMiddle);
+            public MouseButton ButtonMiddle { get { return buttonMiddle; } }
+
             private Vector2 currentPosition;        // Current pointer position
             private Vector2 previousPosition;       // Previous frame's pointer position
             private Vector2 deltaPosition;          // Movement delta for this frame
-            private Vector2 flickVelocity;          // Flick velocity is a moving average of deltas
             private bool mouseMovedOnThisFrame;     // Tracks if the mouse moved on this frame
 
 
@@ -514,25 +220,19 @@ namespace B2B.GameKit.InputController
             /// <summary>
             /// Update this Input
             /// </summary>
-            public void ReadInput(float flickAccumulationFactor, float flickThreshold)
+            public void ReadInput(float dragThresholdMouse, float holdTime, float tapTime, float doubleTapTime)
             {
                 if (!enabled)
                     return;
 
                 previousPosition = currentPosition;
-                currentPosition = InputReplay.Instance.mousePosition;
+                currentPosition = Input.mousePosition;
                 deltaPosition = currentPosition - previousPosition;
                 mouseMovedOnThisFrame = deltaPosition.sqrMagnitude >= Mathf.Epsilon;
 
-                // Flick?
-                if (deltaPosition.magnitude > flickThreshold)
-                {
-                    flickVelocity = (flickVelocity * (1 - flickAccumulationFactor)) + (deltaPosition * flickAccumulationFactor);
-                }
-                else
-                {
-                    flickVelocity = Vector2.zero;
-                }
+                buttonLeft.ReadInput(deltaPosition, dragThresholdMouse, holdTime, tapTime, doubleTapTime);
+                buttonRight.ReadInput(deltaPosition, dragThresholdMouse, holdTime, tapTime, doubleTapTime);
+                buttonMiddle.ReadInput(deltaPosition, dragThresholdMouse, holdTime, tapTime, doubleTapTime);
             }
                         
             /// <summary>
@@ -565,17 +265,7 @@ namespace B2B.GameKit.InputController
 
                 return deltaPosition;
             }
-            /// <summary>
-            /// Flick velocity is a moving average of deltas
-            /// </summary>
-            public Vector2 GetFlickVelocity()
-            {
-                if (!enabled)
-                    return Vector2.zero;
-
-                return flickVelocity;
-            }
-            
+                        
             /// <summary>
             /// Tracks if the mouse moved on this frame
             /// </summary>
@@ -592,7 +282,23 @@ namespace B2B.GameKit.InputController
             /// </summary>
             public bool ReceivingInput()
             {
-                return MouseMovedOnThisFrame();
+                return buttonLeft.ReceivingInput() || buttonMiddle.ReceivingInput() || buttonRight.ReceivingInput();
+            }
+
+            /// <summary>
+            /// Return the scene mouse position, from main camera only !
+            /// </summary>
+            public Vector2 ScreenToWorldPoint2D()
+            {
+                Vector3 nextPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                return new Vector2(nextPosition.x, nextPosition.y);
+            }
+            /// <summary>
+            /// Return the scene mouse position, from main camera only !
+            /// </summary>
+            public Vector3 ScreenToWorldPoint3D()
+            {
+                return Camera.main.ScreenToWorldPoint(Input.mousePosition);
             }
 
 
@@ -623,7 +329,7 @@ namespace B2B.GameKit.InputController
             if (!haveControl)
                 return false;
 
-            input.ReadInput(flickAccumulationFactor, dragThresholdMouse, flickThreshold, holdTime, tapTime, doubleTapTime);
+            input.ReadInput(holdTime, tapTime, doubleTapTime);
             return true;
         }
         protected bool ReadInput(ControllerButton input)
@@ -631,7 +337,7 @@ namespace B2B.GameKit.InputController
             if (!haveControl)
                 return false;
 
-            input.ReadInput(flickAccumulationFactor, dragThresholdMouse, flickThreshold, holdTime, tapTime, doubleTapTime);
+            input.ReadInput(holdTime, tapTime, doubleTapTime);
             return true;
         }
         protected bool ReadInput(Axis input)
@@ -642,20 +348,12 @@ namespace B2B.GameKit.InputController
             input.ReadInput();
             return true;
         }
-        protected bool ReadInput(MouseButton input)
-        {
-            if (!haveControl)
-                return false;
-
-            input.ReadInput(flickAccumulationFactor, dragThresholdMouse, flickThreshold, holdTime, tapTime, doubleTapTime);
-            return true;
-        }
         protected bool ReadInput(InputMouse input)
         {
             if (!haveControl)
                 return false;
 
-            input.ReadInput(flickAccumulationFactor, flickThreshold);
+            input.ReadInput(dragThresholdMouse, holdTime, tapTime, doubleTapTime);
             return true;
         }
 
